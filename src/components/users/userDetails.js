@@ -20,6 +20,7 @@ import { connect } from "react-redux";
 import config from "../../config/config";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
+import userImg from "../../assets/user.jfif"
 
 import { userActions } from "../../actions";
 
@@ -187,12 +188,9 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                       src={
                         user.photo
                           ? `${config.baseUrl + uploadsEndPoint + user.photo}`
-                          : ""
+                          : userImg
                       }
-                    />
-                    {!user.photo ? (
-                      <AccountBoxIcon className={classes.icon} />
-                    ) : null}
+                    />       
                   </CardMedia>
                 </Grid>
                 <Grid item xs={12} sm={8}>
@@ -201,7 +199,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                       <TextValidator
                         fullWidth
                         margin="dense"
-                        variant={edit ? "outlined" : "filled"}
+                        variant="outlined"
                         required
                         name="name"
                         label="Name"
@@ -213,7 +211,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                       <TextValidator
                         fullWidth
                         margin="dense"
-                        variant={edit ? "outlined" : "filled"}
+                        variant="outlined"
                         required
                         name="lastname"
                         label="Lastname"
@@ -225,7 +223,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                       <TextValidator
                         fullWidth
                         margin="dense"
-                        variant={edit ? "outlined" : "filled"}
+                        variant="outlined"
                         required
                         name="email"
                         label="Email"
@@ -238,7 +236,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                       <TextValidator
                         fullWidth
                         margin="dense"
-                        variant={edit ? "outlined" : "filled"}
+                        variant="outlined"
                         required
                         name="identification"
                         label="Identification"
@@ -250,7 +248,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                       <TextValidator
                         fullWidth
                         margin="dense"
-                        variant={edit ? "outlined" : "filled"}
+                        variant="outlined"
                         required
                         name="direction"
                         label="Direction"
@@ -263,7 +261,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                       <TextValidator
                         fullWidth
                         margin="dense"
-                        variant="filled"
+                        variant="outlined"
                         required
                         name=""
                         label="Started"
@@ -275,7 +273,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                       <TextValidator
                         fullWidth
                         margin="dense"
-                        variant="filled"
+                        variant="outlined"
                         required
                         name=""
                         label="Last login"

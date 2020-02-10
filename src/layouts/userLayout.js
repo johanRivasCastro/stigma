@@ -119,9 +119,6 @@ const UserLayout = ({ component: Component, container, ...rest }) => {
               >
                 <MenuIcon />
               </IconButton>
-              <Typography variant="h6" noWrap>
-                Mini variant drawer
-              </Typography>
             </Toolbar>
           </AppBar>
           <Drawer
@@ -147,7 +144,7 @@ const UserLayout = ({ component: Component, container, ...rest }) => {
               </IconButton>
             </div>
             <Divider />
-            <List>
+            {/* <List>
               {["Inbox", "Starred", "Send email", "Drafts"].map(
                 (text, index) => (
                   <ListItem button key={text}>
@@ -158,7 +155,7 @@ const UserLayout = ({ component: Component, container, ...rest }) => {
                   </ListItem>
                 )
               )}
-            </List>
+            </List> */}
             <Divider />
             <List>
               {["All mail", "Trash", "Spam"].map((text, index) => (

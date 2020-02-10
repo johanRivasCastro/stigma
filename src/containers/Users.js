@@ -21,7 +21,7 @@ class Users extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(userActions.getUsers(this.state.activePage, this.state.filter));
-    dispatch(roleActions.getRoles());
+  //  dispatch(roleActions.getRoles());
   }
 
   handlePageChange(pageNumber) {

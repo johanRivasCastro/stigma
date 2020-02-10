@@ -11,7 +11,8 @@ import {
 
 import config from "../../config/config";
 import { UserDetails } from "../users/userDetails";
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
+
+import userImg from "../../assets/user.jfif"
 
 const useStyles = makeStyles({
   card: {
@@ -27,6 +28,10 @@ const useStyles = makeStyles({
   icon: {
     fontSize: "100px",
     color: "#3f51b5"
+  },
+  userPhoto:{
+    width:"110px",
+    height:"auto"
   }
 });
 
@@ -48,15 +53,16 @@ const User = ({ name, email, photo, id }) => {
         <CardActionArea onClick={() => handleClickSeeUserDetails(id)}>
           <Grid container>
             <Grid item xs={12} sm={4}>
-              <CardMedia
-                className={classes.media}
-                image={
-                  photo ? `${config.baseUrl + uploadsEndPoint + photo}` : null
-                }
-                title="User photo"
-              >
-                {!photo ? <AccountBoxIcon className={classes.icon} /> : null}
-              </CardMedia>
+               <CardMedia>
+                    <img
+                      className={classes.userPhoto}
+                      src={
+                        photo
+                          ? `${config.baseUrl + uploadsEndPoint + photo}`
+                          : userImg
+                      }
+                    />       
+                  </CardMedia>
             </Grid>
             <Grid item sm={8}>
               <CardContent>
