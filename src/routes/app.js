@@ -7,13 +7,14 @@ import {
 } from "react-router-dom";
 import UserLayout from "../layouts/userLayout";
 import { Users } from "../containers/Users";
-import UserDetails from "../components/users/userDetails";
+import signIn from "../layouts/signIn";
 
 const App = () => {
   return (
     <Router>
       <Switch>
-        <UserLayout path="/" component={Users} />
+        <Route path="/" component={signIn} />
+        <UserLayout path="/users" component={Users} />
         {/* <UserLayout
          exact
          path="/manager/editUser/:id"
