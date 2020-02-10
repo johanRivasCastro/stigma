@@ -167,7 +167,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
             </Typography>
             {edit ? (
               <Button autoFocus color="inherit" onClick={handleClickSave}>
-                Save i
+                Save dd
               </Button>
             ) : (
               <Button autoFocus color="inherit" onClick={handleClickEdit}>
