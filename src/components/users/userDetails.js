@@ -19,10 +19,9 @@ import CloseIcon from "@material-ui/icons/Close";
 import { connect } from "react-redux";
 import config from "../../config/config";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
-import userImg from "../../assets/user.jfif"
+import userImg from "../../assets/user.jfif";
 
-import { userActions } from "../../actions";
+import { userActions } from "../../redux/user/user.action";
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -168,7 +167,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
             </Typography>
             {edit ? (
               <Button autoFocus color="inherit" onClick={handleClickSave}>
-                Save dd
+                Save
               </Button>
             ) : (
               <Button autoFocus color="inherit" onClick={handleClickEdit}>
@@ -190,7 +189,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                           ? `${config.baseUrl + uploadsEndPoint + user.photo}`
                           : userImg
                       }
-                    />       
+                    />
                   </CardMedia>
                 </Grid>
                 <Grid item xs={12} sm={8}>

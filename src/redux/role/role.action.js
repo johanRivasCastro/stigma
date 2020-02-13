@@ -1,4 +1,4 @@
-import { RoleService } from "../services";
+import { RoleService } from "../../services";
 const endPoint = "roles/";
 
 const getRoles = () => {

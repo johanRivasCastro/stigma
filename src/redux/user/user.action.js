@@ -1,4 +1,4 @@
-import { UserService } from "../services";
+import { UserService } from "./user.service";
 
 const endPoint = "users/";
 const getUsers = (page, term = "") => {
