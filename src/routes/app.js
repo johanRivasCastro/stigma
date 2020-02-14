@@ -13,8 +13,8 @@ const App = () => {
   return (
     <Router>
       <Switch>
-        <Route path="/" component={SignIn} />
-        {/* <UserLayout path="/" component={Users} /> */}
+        {/* <Route path="/" component={SignIn} /> */}
+        <UserLayout path="/" component={Users} />
         {/* <UserLayout
          exact
          path="/manager/editUser/:id"

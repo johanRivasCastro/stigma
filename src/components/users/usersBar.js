@@ -101,7 +101,7 @@ const UsersBar = ({ setTerm }) => {
       <form onSubmit={handleSubmit}>
         {/* <AppBar position="static" className={classes.appBar}> */}
         <Toolbar>
-          <IconButton
+          <div
             edge="start"
             className={classes.menuButton}
             color="inherit"
@@ -113,7 +113,7 @@ const UsersBar = ({ setTerm }) => {
                 //   onClick={handleClickCreateUser}
               />
             </Fab>
-          </IconButton>
+          </div>
           {/* <Typography className={classes.title} variant="h6" noWrap>
             Material-UI
           </Typography> */}
