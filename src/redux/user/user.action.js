@@ -13,19 +13,13 @@ const getUsers = (page, term = "") => dispatch => {
   });
 };
 
-const editUser = user => {
-  return dispatch => {
-    UserService.put(endPoint + user.id, user).then(response => {
-      dispatch(changeEditedUser(response));
+const editUser = user => dispatch => {
+  UserService.put(endPoint + user.id, user).then(user => {
+    dispatch({
+      type: "EDITED_USER",
+      user: user
     });
-  };
-};
-
-const changeEditedUser = (editedUser = []) => {
-  return {
-    type: "EDITED_USER",
-    user: editedUser
-  };
+  });
 };
 
 export const userActions = {

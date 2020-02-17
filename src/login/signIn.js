@@ -1,23 +1,26 @@
-import React, { useState } from "react";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
+import React, { useState, useEffect } from "react";
+import {
+  Container,
+  CardMedia,
+  makeStyles,
+  Typography,
+  Box,
+  Avatar,
+  Button,
+  CssBaseline,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Link,
+  Grid
+} from "@material-ui/core/";
+
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles, CardMedia } from "@material-ui/core/";
-import Container from "@material-ui/core/Container";
 import userImg from "../assets/user.jfif";
+
 import { connect } from "react-redux";
 import { loginActions } from "../redux/auth/auth.action";
-
 import { withRouter } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 function Copyright() {
   return (
@@ -60,8 +63,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SignIn = ({ dispatch }) => {
+const SignIn = ({ dispatch, loggedIn, history }) => {
   const classes = useStyles();
+
+  useEffect(() => {
+    if (loggedIn) {
+      history.push("/users");
+    }
+  }, [loggedIn]);
 
   const [credentials, setCredentials] = useState({ email: "", password: "" });
 
@@ -93,7 +102,7 @@ const SignIn = ({ dispatch }) => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={handleLoginOnClick}>
           <Box mb={3}>
             <TextField
               variant="outlined"
@@ -130,7 +139,6 @@ const SignIn = ({ dispatch }) => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={handleLoginOnClick}
           >
             Sign In
           </Button>
@@ -155,14 +163,16 @@ const SignIn = ({ dispatch }) => {
   );
 };
 
-// const mapStateToProps = state => {
-//   return {
-//     loggedIn: state.authentication
-//   };
-// };
+const mapStateToProps = state => {
+  return {
+    loggedIn: state.authentication.loggedIn
+  };
+};
 
-const connectLoginPage = connect(null, null, null, {
-  pure: false
-})(SignIn);
+const connectLoginPage = withRouter(
+  connect(mapStateToProps, null, null, {
+    pure: false
+  })(SignIn)
+);
 
 export { connectLoginPage as SignIn };

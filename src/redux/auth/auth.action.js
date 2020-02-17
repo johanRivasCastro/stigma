@@ -1,25 +1,29 @@
 import { AuthService } from "./auth.service";
+import { session, setAuthorizationToken } from "../../helpers/";
 
-const endPoint = "login/";
+const endPoint = "login";
 
-const login = credentials => {
-  return dispatch => {
-    AuthService.post(endPoint, credentials).then(response => {
-      if (response.token) {
-        localStorage.setItem("jtoken", response.token);
-        dispatch(setCurrentUser(response.token));
+const login = credentials => dispatch => {
+  AuthService.post(endPoint, credentials).then(response => {
+    if (response) {
+      const { token } = response;
+      const user = session.saveUser(token);
+      if (user) {
+        dispatch({
+          type: "SET_CURRENT_USER",
+          currentUser: user
+        });
+        setAuthorizationToken(token);
       }
-    });
-  };
+    }
+  });
 };
 
-const setCurrentUser = token => {
-  return {
-    type: "LOGIN_SUCCESS",
-    token: token
-  };
+const setCurrentUser = user => {
+  return {};
 };
 
 export const loginActions = {
-  login
+  login,
+  setCurrentUser
 };

@@ -7,6 +7,7 @@ export const user = (state = initialState, action) => {
   switch (action.type) {
     case "FETECHED_ALL_USERS": {
       const { totalPages, size, totalElements, content } = action.users;
+
       return {
         ...state,
         users: content,
