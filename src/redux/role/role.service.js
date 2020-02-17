@@ -1,9 +1,9 @@
 import axios from "axios";
 import config from "../../config/config";
 
-const get = async apiEndpoint => {
+const get = apiEndPoint => {
   try {
-    const { data = [] } = await axios.get(config.baseUrl + apiEndpoint);
+    const { data = [] } = await axios.get(config.baseUrl + apiEndPoint);
     return data;
   } catch (err) {
     console.log(err);

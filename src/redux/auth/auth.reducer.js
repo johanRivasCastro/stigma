@@ -1,23 +1,21 @@
-const token = '';
+const token = "";
 
-const initialState ={
-    loggedIn:false,
-    token
-}
+const initialState = {
+  loggedIn: false,
+  currentUser: {}
+};
 
-
-export const authentication = (state = initialState, action) =>{
-
-    switch(action.type){
-        case "LOGIN_SUCCESS":{
-            return {
-                loggedIn:true,
-                token:action.token
-            }
-        }
-        default:{
-            return state;
-        }
+export const authentication = (state = initialState, action) => {
+  switch (action.type) {
+    case "SET_CURRENT_USER": {
+      return {
+        ...state,
+        loggedIn: true,
+        currentUser: action.currentUser
+      };
     }
-
-}
+    default: {
+      return state;
+    }
+  }
+};

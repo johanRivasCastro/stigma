@@ -76,6 +76,8 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
       return user.id === id;
     });
 
+    console.log(currentUser);
+
     setUser(...currentUser);
     const uRoles = new Map();
     roles.forEach(role => {
