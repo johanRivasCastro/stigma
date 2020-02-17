@@ -10,13 +10,13 @@ const get = async apiEndpoint => {
   }
 };
 
-const put = (apiEndpoint, payload) => {
-  return axios
-    .put(config.baseUrl + apiEndpoint, payload)
-    .then(response => {
-      return response.data;
-    })
-    .catch(err => console.error(err));
+const put = async (apiEndpoint, user) => {
+  try {
+    const { data = [] } = await axios.put(config.baseUrl + apiEndpoint, user);
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const UserService = {
