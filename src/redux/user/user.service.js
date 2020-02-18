@@ -20,7 +20,17 @@ const put = async (apiEndpoint, user) => {
   }
 };
 
+const post = async (apiEndpoint, user) => {
+  try {
+    const { data = [] } = await axios.post(config.baseUrl + apiEndpoint, user);
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const UserService = {
   get,
-  put
+  put,
+  post
 };

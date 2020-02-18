@@ -22,7 +22,19 @@ const editUser = user => dispatch => {
   });
 };
 
+const createUser = user => dispatch => {
+  UserService.post(endPoint, user).then(user => {
+    if (user) {
+      dispatch({
+        type: "CREATED_USER",
+        user: user
+      });
+    }
+  });
+};
+
 export const userActions = {
   getUsers,
-  editUser
+  editUser,
+  createUser
 };

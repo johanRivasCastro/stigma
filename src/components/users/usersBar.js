@@ -13,6 +13,7 @@ import {
 
 import SearchIcon from "@material-ui/icons/Search";
 import LibraryAddIcon from "@material-ui/icons/LibraryAdd";
+import { UserDetails } from "./userDetails";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -84,6 +85,7 @@ const UsersBar = ({ setTerm }) => {
   const classes = useStyles();
 
   const [filter, setFilter] = useState("");
+  const [openDetails, setOpenDetails] = useState(false);
 
   const handleInputChange = e => {
     setFilter(e.target.value);
@@ -94,7 +96,9 @@ const UsersBar = ({ setTerm }) => {
     setTerm(filter);
   };
 
-  const handleClickCreateUser = e => {};
+  const handleClickCreateUser = e => {
+    setOpenDetails(true);
+  };
 
   return (
     <div className={classes.root}>
@@ -106,12 +110,10 @@ const UsersBar = ({ setTerm }) => {
             className={classes.menuButton}
             color="inherit"
             aria-label="open drawer"
+            onClick={handleClickCreateUser}
           >
             <Fab>
-              <LibraryAddIcon
-                className={classes.libraryIcon}
-                //   onClick={handleClickCreateUser}
-              />
+              <LibraryAddIcon className={classes.libraryIcon} />
             </Fab>
           </div>
           {/* <Typography className={classes.title} variant="h6" noWrap>
@@ -135,6 +137,9 @@ const UsersBar = ({ setTerm }) => {
         </Toolbar>
         {/* </AppBar> */}
       </form>
+      {openDetails && (
+        <UserDetails open={openDetails} setOpen={setOpenDetails} />
+      )}
     </div>
   );
 };

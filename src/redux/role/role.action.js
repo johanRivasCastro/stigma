@@ -1,8 +1,8 @@
-import { RoleService } from "../../services";
+import { roleService } from "./role.service";
 const endPoint = "roles/";
 
 const getRoles = () => dispatch => {
-  RoleService.get(endPoint).then(roles => {
+  roleService.get(endPoint).then(roles => {
     dispatch({
       type: "FETCHED_ALL_ROLES",
       roles: roles

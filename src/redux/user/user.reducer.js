@@ -27,6 +27,12 @@ export const user = (state = initialState, action) => {
       state.users[index] = action.user;
       return {
         ...state,
+        users: [...state.users]
+      };
+    }
+    case "CREATED_USER": {
+      return {
+        ...state,
         users: [...state.users, action.user]
       };
     }

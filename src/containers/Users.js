@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { userActions } from "../redux/user/user.action";
+import { roleActions } from "../redux/role/role.action";
 import { withRouter } from "react-router-dom";
 import User from "../components/users/user";
 import { Grid, Box, makeStyles } from "@material-ui/core";
@@ -21,7 +22,7 @@ class Users extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(userActions.getUsers(this.state.activePage, this.state.filter));
-    //  dispatch(roleActions.getRoles());
+    dispatch(roleActions.getRoles());
   }
 
   handlePageChange(pageNumber) {

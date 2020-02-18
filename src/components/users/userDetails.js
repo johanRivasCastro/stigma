@@ -18,7 +18,7 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import { connect } from "react-redux";
 import config from "../../config/config";
-import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
+import { TextField } from "@material-ui/core";
 import userImg from "../../assets/user.jfif";
 
 import { userActions } from "../../redux/user/user.action";
@@ -72,22 +72,22 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
   const [userRoles, setUserRoles] = useState(new Map());
 
   useEffect(() => {
-    const currentUser = users.filter(user => {
-      return user.id === id;
-    });
-
-    console.log(currentUser);
-
-    setUser(...currentUser);
-    const uRoles = new Map();
-    roles.forEach(role => {
-      uRoles.set(
-        role.authority,
-        currentUser[0].roles.some(r => r.authority === role.authority)
-      );
-    });
-
-    setUserRoles(uRoles);
+    if (id) {
+      const currentUser = users.filter(user => {
+        return user.id === id;
+      });
+      setUser(...currentUser);
+      const uRoles = new Map();
+      roles.forEach(role => {
+        uRoles.set(
+          role.authority,
+          currentUser[0].roles.some(r => r.authority === role.authority)
+        );
+      });
+      setUserRoles(uRoles);
+    } else {
+      setEdit(true);
+    }
   }, []);
 
   const handleClose = () => {
@@ -96,13 +96,6 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
 
   const handleOnSubmit = e => {
     e.preventDefault();
-  };
-
-  const handleClickEdit = () => {
-    setEdit(!edit);
-  };
-
-  const handleClickSave = () => {
     let selectedRoles = [];
 
     for (let [key, value] of userRoles.entries()) {
@@ -114,8 +107,16 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
       }
     }
 
-    dispatch(userActions.editUser({ ...user, roles: selectedRoles }));
+    if (id) {
+      dispatch(userActions.editUser({ ...user, roles: selectedRoles }));
+    } else {
+      dispatch(userActions.createUser({ ...user, roles: selectedRoles }));
+    }
     setOpen(false);
+  };
+
+  const handleClickEdit = () => {
+    setEdit(!edit);
   };
 
   const handleInputChange = e => {
@@ -125,6 +126,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
     } = e;
 
     let nValue = value;
+    console.log(value);
 
     if (name === "enable") {
       nValue = value === "true" ? true : false;
@@ -160,26 +162,23 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
             >
               <CloseIcon />
             </IconButton>
-            <Typography
+            {/* <Typography
               variant="h6"
               className={classes.title}
               onClick={handleClose}
             >
               Cancel
-            </Typography>
-            {edit ? (
-              <Button autoFocus color="inherit" onClick={handleClickSave}>
-                Save
-              </Button>
-            ) : (
+            </Typography> */}
+
+            {id && (
               <Button autoFocus color="inherit" onClick={handleClickEdit}>
-                Edit
+                {!edit ? "Edit" : "Cancel"}
               </Button>
             )}
           </Toolbar>
         </AppBar>
         <Box className={classes.detailsContainer}>
-          <ValidatorForm onSubmit={handleOnSubmit}>
+          <form onSubmit={handleOnSubmit}>
             <Card className={classes.card}>
               <Grid container direction="row" spacing={3}>
                 <Grid item xs={12} sm={3}>
@@ -197,7 +196,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                 <Grid item xs={12} sm={8}>
                   <Grid container direction="row" spacing={3} justify="center">
                     <Grid item xs={12} sm={6}>
-                      <TextValidator
+                      <TextField
                         fullWidth
                         margin="dense"
                         variant="outlined"
@@ -205,23 +204,23 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                         name="name"
                         label="Name"
                         onChange={handleInputChange}
-                        value={user.name}
+                        value={user.name || ""}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextValidator
+                      <TextField
                         fullWidth
                         margin="dense"
                         variant="outlined"
                         required
                         name="lastname"
                         label="Lastname"
-                        value={user.lastname}
+                        value={user.lastname || ""}
                         onChange={handleInputChange}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextValidator
+                      <TextField
                         fullWidth
                         margin="dense"
                         variant="outlined"
@@ -229,16 +228,17 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                         name="email"
                         label="Email"
                         type="email"
-                        value={user.email}
+                        value={user.email || ""}
                         onChange={handleInputChange}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextValidator
+                      <TextField
                         fullWidth
                         margin="dense"
                         variant="outlined"
                         required
+                        pattern=".{13,13}"
                         name="identification"
                         label="Identification"
                         value={user.identification || ""}
@@ -246,7 +246,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                       />
                     </Grid>
                     <Grid item xs={12} sm={12}>
-                      <TextValidator
+                      <TextField
                         fullWidth
                         margin="dense"
                         variant="outlined"
@@ -258,39 +258,43 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                       />
                     </Grid>
 
-                    <Grid item xs={12} sm={6}>
-                      <TextValidator
-                        fullWidth
-                        margin="dense"
-                        variant="outlined"
-                        required
-                        name=""
-                        label="Started"
-                        value={user.created || ""}
-                        onChange={handleInputChange}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextValidator
-                        fullWidth
-                        margin="dense"
-                        variant="outlined"
-                        required
-                        name=""
-                        label="Last login"
-                        value={
-                          user.lastLogin || "The user has not logged in yed"
-                        }
-                        onChange={handleInputChange}
-                      />
-                    </Grid>
+                    {id && (
+                      <>
+                        {" "}
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            fullWidth
+                            margin="dense"
+                            variant="outlined"
+                            name=""
+                            label="Started"
+                            value={user.created || ""}
+                            onChange={handleInputChange}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            fullWidth
+                            margin="dense"
+                            variant="outlined"
+                            required
+                            name=""
+                            label="Last login"
+                            value={
+                              user.lastLogin || "The user has not logged in yed"
+                            }
+                            onChange={handleInputChange}
+                          />
+                        </Grid>
+                      </>
+                    )}
                     <Grid item xs={12} sm={6}>
                       <FormControlLabel
                         control={
                           <Switch
-                            checked={user.enable}
+                            checked={user.enable || false}
                             onChange={handleInputChange}
-                            value={!user.enable}
+                            value={!user.enable || false}
                             name="enable"
                           />
                         }
@@ -310,15 +314,26 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                               onChange={handleCheckRoles}
                             />
                           }
-                          label={role.authority.toLowerCase()}
+                          label={role.authority
+                            .substring(5, role.authority.length)
+                            .replace("_", " ")}
                         />
                       ))}
+                    </Grid>
+                    <Grid item xs={12} sm={12}>
+                      <Box display="flex" justifyContent="flex-end">
+                        {edit ? (
+                          <Button autoFocus color="primary" type="submit">
+                            {id ? "Save" : "Create"}
+                          </Button>
+                        ) : null}
+                      </Box>
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
             </Card>
-          </ValidatorForm>
+          </form>
         </Box>
       </Dialog>
     </div>

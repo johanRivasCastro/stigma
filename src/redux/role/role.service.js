@@ -1,7 +1,7 @@
 import axios from "axios";
 import config from "../../config/config";
 
-const get = apiEndPoint => {
+const get = async apiEndPoint => {
   try {
     const { data = [] } = await axios.get(config.baseUrl + apiEndPoint);
     return data;
@@ -10,4 +10,4 @@ const get = apiEndPoint => {
   }
 };
 
-export const RoleService = { get };
+export const roleService = { get };
