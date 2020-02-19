@@ -21,6 +21,7 @@ import userImg from "../assets/user.jfif";
 import { connect } from "react-redux";
 import { loginActions } from "../redux/auth/auth.action";
 import { withRouter } from "react-router-dom";
+import { ErrorMessage } from "../components/common/errorMessage";
 
 function Copyright() {
   return (
@@ -94,6 +95,7 @@ const SignIn = ({ dispatch, loggedIn, history }) => {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
+        <ErrorMessage />
         <Avatar className={classes.avatar}>
           <CardMedia>
             <img className={classes.userPhoto} src={userImg} />

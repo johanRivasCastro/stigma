@@ -5,8 +5,10 @@ const endPoint = "login";
 
 const login = credentials => dispatch => {
   AuthService.post(endPoint, credentials).then(response => {
-    if (response) {
-      const { token } = response;
+    if (response.status !== 200) {
+      dispatch(showErrorMessage(response.data.mensaje));
+    } else {
+      const { token } = response.data;
       const user = session.saveUser(token);
       if (user) {
         dispatch(setCurrentUser(user));
@@ -20,6 +22,13 @@ const setCurrentUser = user => {
   return {
     type: "SET_CURRENT_USER",
     currentUser: user
+  };
+};
+
+const showErrorMessage = message => {
+  return {
+    type: "ERROR_MESSAGE",
+    message: message
   };
 };
 

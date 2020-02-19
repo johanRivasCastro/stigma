@@ -3,13 +3,11 @@ import config from "../../config/config";
 
 const post = async (apiEndPoint, credentials) => {
   try {
-    const { data = [] } = await axios.post(
-      config.baseUrl + apiEndPoint,
-      credentials
-    );
-    return data;
+    const res = await axios.post(config.baseUrl + apiEndPoint, credentials);
+    return res;
   } catch (err) {
     console.log(err);
+    return err.response;
   }
 };
 

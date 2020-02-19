@@ -1,23 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import clsx from "clsx";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import List from "@material-ui/core/List";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
+import {
+  makeStyles,
+  useTheme,
+  Drawer,
+  AppBar,
+  Toolbar,
+  List,
+  CssBaseline,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+  Divider,
+  IconButton
+} from "@material-ui/core/";
+
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
+import GrainIcon from "@material-ui/icons/Grain";
+
 import MailIcon from "@material-ui/icons/Mail";
+import MenuIcon from "@material-ui/icons/Menu";
+import InboxIcon from "@material-ui/icons/MoveToInbox";
+
 import { Route } from "react-router-dom";
+import { RoleDialog } from "../components/users/role";
 
 const drawerWidth = 240;
 
@@ -85,7 +93,8 @@ const useStyles = makeStyles(theme => ({
 const UserLayout = ({ component: Component, container, ...rest }) => {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
+  const [roleDialogOpen, setRoleDialogOpen] = useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -93,6 +102,10 @@ const UserLayout = ({ component: Component, container, ...rest }) => {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const handleRoleDialogOpen = () => {
+    setRoleDialogOpen(!roleDialogOpen);
   };
 
   return (
@@ -166,12 +179,25 @@ const UserLayout = ({ component: Component, container, ...rest }) => {
                   <ListItemText primary={text} />
                 </ListItem>
               ))}
+
+              <ListItem button key="Roles" onClick={handleRoleDialogOpen}>
+                <ListItemIcon>
+                  <GrainIcon />
+                </ListItemIcon>
+                <ListItemText primary="Roles" />
+              </ListItem>
             </List>
           </Drawer>
           <main className={classes.content}>
             <div className={classes.toolbar} />
             <Component {...matchProps} />
           </main>
+          {roleDialogOpen && (
+            <RoleDialog
+              open={roleDialogOpen}
+              handleClose={handleRoleDialogOpen}
+            />
+          )}
         </div>
       )}
     />
