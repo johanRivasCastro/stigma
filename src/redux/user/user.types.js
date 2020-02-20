@@ -1,0 +1,3 @@
+export const FETECHED_ALL_USERS = "FETECHED_ALL_USERS";
+export const EDITED_USER = "EDITED_USER";
+export const CREATED_USER = "CREATED_USER";

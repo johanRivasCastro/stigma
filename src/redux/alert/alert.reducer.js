@@ -16,6 +16,16 @@ export const alertInfo = (state = initialState, action) => {
         }
       };
     }
+
+    case "REMOVE_ERROR": {
+      return {
+        ...state,
+        errorMessage: {
+          error: false,
+          message: ""
+        }
+      };
+    }
     default: {
       return state;
     }

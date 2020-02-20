@@ -1,5 +1,6 @@
 import { AuthService } from "./auth.service";
 import { session, setAuthorizationToken } from "../../helpers/";
+import { SET_CURRENT_USER, ERROR_MESSAGE } from "./auth.types";
 
 const endPoint = "login";
 
@@ -20,14 +21,14 @@ const login = credentials => dispatch => {
 
 const setCurrentUser = user => {
   return {
-    type: "SET_CURRENT_USER",
+    type: SET_CURRENT_USER,
     currentUser: user
   };
 };
 
 const showErrorMessage = message => {
   return {
-    type: "ERROR_MESSAGE",
+    type: ERROR_MESSAGE,
     message: message
   };
 };

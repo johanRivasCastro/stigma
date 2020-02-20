@@ -8,12 +8,14 @@ import {
 import UserLayout from "../layouts/userLayout";
 import { Users } from "../containers/Users";
 import { SignIn } from "../login/signIn";
+import { Courses } from "../containers/courses";
 
 const App = () => {
   return (
     <Router>
       <Switch>
         <UserLayout path="/users" component={Users} />
+        <UserLayout path="/courses" component={Courses} />
         <Route path="/" component={SignIn} />
 
         {/* <UserLayout

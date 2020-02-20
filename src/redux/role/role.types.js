@@ -1,0 +1,4 @@
+export const FETCHED_ALL_ROLES = "FETCHED_ALL_ROLES";
+export const CREATED_ROLE = "CREATED_ROLE";
+export const DELETED_ROLE = "DELETED_ROLE";
+export const ERROR_MESSAGE = "ERROR_MESSAGE";

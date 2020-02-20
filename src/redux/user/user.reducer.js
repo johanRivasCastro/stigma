@@ -1,3 +1,5 @@
+import { FETECHED_ALL_USERS, EDITED_USER, CREATED_USER } from "./user.types";
+
 const initialState = {
   users: [],
   usersPagination: {}
@@ -5,7 +7,7 @@ const initialState = {
 
 export const user = (state = initialState, action) => {
   switch (action.type) {
-    case "FETECHED_ALL_USERS": {
+    case FETECHED_ALL_USERS: {
       const { totalPages, size, totalElements, content } = action.users;
 
       return {
@@ -18,7 +20,7 @@ export const user = (state = initialState, action) => {
         }
       };
     }
-    case "EDITED_USER": {
+    case EDITED_USER: {
       const index = state.users
         .map(function(e) {
           return e.id;
@@ -30,7 +32,7 @@ export const user = (state = initialState, action) => {
         users: [...state.users]
       };
     }
-    case "CREATED_USER": {
+    case CREATED_USER: {
       return {
         ...state,
         users: [...state.users, action.user]

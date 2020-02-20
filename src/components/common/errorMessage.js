@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { Alert, AlertTitle } from "@material-ui/lab";
 
-const ErrorMessage = ({ errorMessage }) => {
+const ErrorMessage = ({ errorMessage, dispatch }) => {
   const [showMessage, setShowMessage] = useState(false);
 
   useEffect(() => {
@@ -11,6 +11,7 @@ const ErrorMessage = ({ errorMessage }) => {
       setShowMessage(true);
       setTimeout(() => {
         setShowMessage(false);
+        dispatch({ type: "REMOVE_ERROR" });
       }, 4000);
     }
   }, [errorMessage]);

@@ -13,19 +13,23 @@ import {
   ListItemText,
   Typography,
   Divider,
-  IconButton
+  IconButton,
+  Box
 } from "@material-ui/core/";
 
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import GrainIcon from "@material-ui/icons/Grain";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
+import AccountCircle from "@material-ui/icons/AccountCircle";
 
 import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 
-import { Route } from "react-router-dom";
+import { withRouter, Route } from "react-router-dom";
 import { RoleDialog } from "../components/users/role";
+import GroupIcon from "@material-ui/icons/Group";
 
 const drawerWidth = 240;
 
@@ -90,7 +94,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UserLayout = ({ component: Component, container, ...rest }) => {
+const UserLayout = ({ component: Component, container, history, ...rest }) => {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = useState(true);
@@ -121,17 +125,33 @@ const UserLayout = ({ component: Component, container, ...rest }) => {
             })}
           >
             <Toolbar>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={handleDrawerOpen}
-                edge="start"
-                className={clsx(classes.menuButton, {
-                  [classes.hide]: open
-                })}
-              >
-                <MenuIcon />
-              </IconButton>
+              <Box display="flex" justifyContent="flex-end">
+                <Box>
+                  <IconButton
+                    color="inherit"
+                    aria-label="open drawer"
+                    onClick={handleDrawerOpen}
+                    edge="start"
+                    className={clsx(classes.menuButton, {
+                      [classes.hide]: open
+                    })}
+                  >
+                    <MenuIcon />
+                  </IconButton>
+                </Box>
+                <Box>
+                  {/* <IconButton
+                    edge="end"
+                    aria-label="account of current user"
+                    aria-controls=""
+                    aria-haspopup="true"
+                    // onClick={handleProfileMenuOpen}
+                    color="inherit"
+                  >
+                    <AccountCircle />
+                  </IconButton> */}
+                </Box>
+              </Box>
             </Toolbar>
           </AppBar>
           <Drawer
@@ -157,18 +177,7 @@ const UserLayout = ({ component: Component, container, ...rest }) => {
               </IconButton>
             </div>
             <Divider />
-            {/* <List>
-              {["Inbox", "Starred", "Send email", "Drafts"].map(
-                (text, index) => (
-                  <ListItem button key={text}>
-                    <ListItemIcon>
-                      {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                    </ListItemIcon>
-                    <ListItemText primary={text} />
-                  </ListItem>
-                )
-              )}
-            </List> */}
+
             <Divider />
             <List>
               {["All mail", "Trash", "Spam"].map((text, index) => (
@@ -179,6 +188,28 @@ const UserLayout = ({ component: Component, container, ...rest }) => {
                   <ListItemText primary={text} />
                 </ListItem>
               ))}
+
+              <ListItem
+                button
+                key="Courses"
+                onClick={() => history.push("/courses")}
+              >
+                <ListItemIcon>
+                  <MenuBookIcon />
+                </ListItemIcon>
+                <ListItemText primary="Courses" />
+              </ListItem>
+
+              <ListItem
+                button
+                key="Users"
+                onClick={() => history.push("/users")}
+              >
+                <ListItemIcon>
+                  <GroupIcon />
+                </ListItemIcon>
+                <ListItemText primary="Users" />
+              </ListItem>
 
               <ListItem button key="Roles" onClick={handleRoleDialogOpen}>
                 <ListItemIcon>
@@ -204,4 +235,4 @@ const UserLayout = ({ component: Component, container, ...rest }) => {
   );
 };
 
-export default UserLayout;
+export default withRouter(UserLayout);
