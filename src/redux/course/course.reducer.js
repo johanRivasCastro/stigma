@@ -1,4 +1,4 @@
-import { FETCHED_ALL_COURSES } from "./course.types";
+import { FETCHED_ALL_COURSES, CREATED_COURSE } from "./course.types";
 
 const initialState = {
   courses: [],
@@ -17,6 +17,13 @@ export const course = (state = initialState, action) => {
           itemsCountPerPage: size,
           totalItemsCount: totalElements
         }
+      };
+    }
+
+    case CREATED_COURSE: {
+      return {
+        ...state,
+        courses: [...state.courses, action.course]
       };
     }
     default: {

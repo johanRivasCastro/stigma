@@ -14,8 +14,9 @@ import courseImg from "../../assets/course.png";
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345,
-    minWidth: 345
+    maxWidth: 300,
+    minWidth: 300,
+    margin: "10px"
   },
   coursePhoto: {
     width: "100%",

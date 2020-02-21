@@ -1,6 +1,7 @@
 import { AuthService } from "./auth.service";
 import { session, setAuthorizationToken } from "../../helpers/";
-import { SET_CURRENT_USER, ERROR_MESSAGE } from "./auth.types";
+import { SET_CURRENT_USER } from "./auth.types";
+import { ERROR_MESSAGE } from "../alert.types";
 
 const endPoint = "login";
 

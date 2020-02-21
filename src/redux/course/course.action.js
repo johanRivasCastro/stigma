@@ -1,5 +1,6 @@
 import { courseService } from "./course.service";
-import { FETCHED_ALL_COURSES } from "./course.types";
+import { FETCHED_ALL_COURSES, CREATED_COURSE } from "./course.types";
+import { ERROR_MESSAGE } from "../alert.types";
 
 const endPoint = "courses/";
 
@@ -14,6 +15,28 @@ const getCourses = (page, term = "") => dispatch => {
     });
 };
 
+const createCourse = course => dispatch => {
+  courseService.post(`${endPoint}`, course).then(response => {
+    if (response.status !== 201) {
+      dispatch(showErrorMessage("There is allready a course with this name"));
+    } else {
+      const { course } = response.data;
+      dispatch({
+        type: CREATED_COURSE,
+        course: course
+      });
+    }
+  });
+};
+
+const showErrorMessage = message => {
+  return {
+    type: ERROR_MESSAGE,
+    message: message
+  };
+};
+
 export const courseActions = {
-  getCourses
+  getCourses,
+  createCourse
 };

@@ -1,3 +1,5 @@
+import { ERROR_MESSAGE, REMOVE_ERROR } from "../alert.types";
+
 const initialState = {
   errorMessage: {
     error: false,
@@ -7,7 +9,7 @@ const initialState = {
 
 export const alertInfo = (state = initialState, action) => {
   switch (action.type) {
-    case "ERROR_MESSAGE": {
+    case ERROR_MESSAGE: {
       return {
         ...state,
         errorMessage: {
@@ -17,7 +19,7 @@ export const alertInfo = (state = initialState, action) => {
       };
     }
 
-    case "REMOVE_ERROR": {
+    case REMOVE_ERROR: {
       return {
         ...state,
         errorMessage: {

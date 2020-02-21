@@ -13,6 +13,7 @@ import {
 
 import SearchIcon from "@material-ui/icons/Search";
 import LibraryAddIcon from "@material-ui/icons/LibraryAdd";
+import { NewCourse } from "./newCourse";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -85,7 +86,7 @@ const UsersBar = ({ setTerm }) => {
   const classes = useStyles();
 
   const [filter, setFilter] = useState("");
-  const [openDetails, setOpenDetails] = useState(false);
+  const [openNewCourse, setOpenNewCourse] = useState(false);
 
   const handleInputChange = e => {
     setFilter(e.target.value);
@@ -97,7 +98,11 @@ const UsersBar = ({ setTerm }) => {
   };
 
   const handleClickCreateCourse = e => {
-    setOpenDetails(true);
+    setOpenNewCourse(true);
+  };
+
+  const handleOpenNewCourse = () => {
+    setOpenNewCourse(!openNewCourse);
   };
 
   return (
@@ -137,9 +142,9 @@ const UsersBar = ({ setTerm }) => {
         </Toolbar>
         {/* </AppBar> */}
       </form>
-      {/* {openDetails && (
-        <UserDetails open={openDetails} setOpen={setOpenDetails} />
-      )} */}
+      {openNewCourse && (
+        <NewCourse open={openNewCourse} handleClose={handleOpenNewCourse} />
+      )}
     </div>
   );
 };

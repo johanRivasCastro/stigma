@@ -16,6 +16,7 @@ const App = () => {
       <Switch>
         <UserLayout path="/users" component={Users} />
         <UserLayout path="/courses" component={Courses} />
+
         <Route path="/" component={SignIn} />
 
         {/* <UserLayout
