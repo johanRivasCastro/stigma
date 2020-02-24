@@ -14,7 +14,11 @@ import {
   Typography,
   Divider,
   IconButton,
-  Box
+  Box,
+  Menu,
+  MenuItem,
+  fade,
+  InputBase
 } from "@material-ui/core/";
 
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -26,6 +30,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
+import SearchIcon from "@material-ui/icons/Search";
 
 import { withRouter, Route } from "react-router-dom";
 import { RoleDialog } from "../components/users/role";
@@ -91,6 +96,50 @@ const useStyles = makeStyles(theme => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3)
+  },
+  toolbarBox: {
+    width: "100%",
+    paddingRight: "20px"
+  },
+  accountCircle: {
+    fontSize: "40px"
+  },
+  search: {
+    position: "relative",
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    "&:hover": {
+      backgroundColor: fade(theme.palette.common.white, 0.25)
+    },
+    marginLeft: 0,
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: theme.spacing(1),
+      width: "auto"
+    }
+  },
+  searchIcon: {
+    width: theme.spacing(7),
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  inputRoot: {
+    color: "inherit"
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 7),
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      width: 150,
+      "&:focus": {
+        width: 200
+      }
+    }
   }
 }));
 
@@ -99,6 +148,7 @@ const UserLayout = ({ component: Component, container, history, ...rest }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(true);
   const [roleDialogOpen, setRoleDialogOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -111,6 +161,31 @@ const UserLayout = ({ component: Component, container, history, ...rest }) => {
   const handleRoleDialogOpen = () => {
     setRoleDialogOpen(!roleDialogOpen);
   };
+
+  const isMenuOpen = Boolean(anchorEl);
+  const handleProfileMenuOpen = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const menuId = "primary-search-account-menu";
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+    </Menu>
+  );
 
   return (
     <Route
@@ -125,31 +200,51 @@ const UserLayout = ({ component: Component, container, history, ...rest }) => {
             })}
           >
             <Toolbar>
-              <Box display="flex" justifyContent="flex-end">
-                <Box>
-                  <IconButton
-                    color="inherit"
-                    aria-label="open drawer"
-                    onClick={handleDrawerOpen}
-                    edge="start"
-                    className={clsx(classes.menuButton, {
-                      [classes.hide]: open
-                    })}
-                  >
-                    <MenuIcon />
-                  </IconButton>
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                className={classes.toolbarBox}
+              >
+                <Box display="flex" flexDirection="row" alignItems="center">
+                  <Box>
+                    <IconButton
+                      color="inherit"
+                      aria-label="open drawer"
+                      onClick={handleDrawerOpen}
+                      edge="start"
+                      className={clsx(classes.menuButton, {
+                        [classes.hide]: open
+                      })}
+                    >
+                      <MenuIcon />
+                    </IconButton>
+                  </Box>
+                  <Box className={classes.search}>
+                    <Box className={classes.searchIcon}>
+                      <SearchIcon />
+                    </Box>
+                    <InputBase
+                      placeholder="Search for anything"
+                      classes={{
+                        root: classes.inputRoot,
+                        input: classes.inputInput
+                      }}
+                      inputProps={{ "aria-label": "search" }}
+                    />
+                  </Box>
                 </Box>
                 <Box>
-                  {/* <IconButton
+                  <IconButton
                     edge="end"
                     aria-label="account of current user"
                     aria-controls=""
                     aria-haspopup="true"
-                    // onClick={handleProfileMenuOpen}
+                    onClick={handleProfileMenuOpen}
                     color="inherit"
                   >
-                    <AccountCircle />
-                  </IconButton> */}
+                    <AccountCircle className={classes.accountCircle} />
+                  </IconButton>
                 </Box>
               </Box>
             </Toolbar>
@@ -229,6 +324,7 @@ const UserLayout = ({ component: Component, container, history, ...rest }) => {
               handleClose={handleRoleDialogOpen}
             />
           )}
+          {renderMenu}>
         </div>
       )}
     />

@@ -7,6 +7,7 @@ import User from "../components/users/user";
 import { Grid, Box, makeStyles } from "@material-ui/core";
 import Pagination from "react-js-pagination";
 import UsersBar from "../components/users/usersBar";
+import { SuccessMessage } from "../components/common/succesMessage";
 
 class Users extends Component {
   constructor(props) {
@@ -68,6 +69,7 @@ class Users extends Component {
             onChange={this.handlePageChange}
           />
         </Box>
+        {/* <SuccessMessage /> */}
       </Grid>
     );
   }

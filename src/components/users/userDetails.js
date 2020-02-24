@@ -126,8 +126,6 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
     } = e;
 
     let nValue = value;
-    console.log(value);
-
     if (name === "enable") {
       nValue = value === "true" ? true : false;
     }

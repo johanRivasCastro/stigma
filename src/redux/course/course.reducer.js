@@ -7,8 +7,9 @@ const initialState = {
 
 export const course = (state = initialState, action) => {
   switch (action.type) {
-    case FETCHED_ALL_COURSES: {
-      const { totalPages, size, totalElements, content } = action.courses;
+    case FETCHED_ALL_COURSES:
+      const { totalPages, size, totalElements, content = [] } = action.courses;
+
       return {
         ...state,
         courses: content,
@@ -18,16 +19,17 @@ export const course = (state = initialState, action) => {
           totalItemsCount: totalElements
         }
       };
-    }
 
-    case CREATED_COURSE: {
+    case CREATED_COURSE:
       return {
         ...state,
         courses: [...state.courses, action.course]
       };
-    }
+
     default: {
-      return state;
+      return {
+        ...state
+      };
     }
   }
 };

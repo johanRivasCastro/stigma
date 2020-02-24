@@ -20,10 +20,10 @@ const createCourse = course => dispatch => {
     if (response.status !== 201) {
       dispatch(showErrorMessage("There is allready a course with this name"));
     } else {
-      const { course } = response.data;
+      const { data } = response;
       dispatch({
         type: CREATED_COURSE,
-        course: course
+        course: data
       });
     }
   });

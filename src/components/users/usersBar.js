@@ -70,7 +70,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   appBar: {
-    // background: "white"
+    background: "#505763",
     // maxWidth: "350px"
     width: "100%"
   },
