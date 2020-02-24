@@ -21,7 +21,20 @@ const post = async (apiEndpoint, course) => {
   }
 };
 
+const getById = async (apiEndpoint, id) => {
+  try {
+    const { data = {} } = await axios.get(
+      `${config.baseUrl + apiEndpoint}/${id}`
+    );
+    return data;
+  } catch (err) {
+    console.log(err);
+    return err.response;
+  }
+};
+
 export const courseService = {
   get,
-  post
+  post,
+  getById
 };

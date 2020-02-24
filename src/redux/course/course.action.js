@@ -29,6 +29,12 @@ const createCourse = course => dispatch => {
   });
 };
 
+const getCourseById = courseId => dispatch => {
+  courseService.getById(`${endPoint}/${courseId}`).then(course => {
+    return course;
+  });
+};
+
 const showErrorMessage = message => {
   return {
     type: ERROR_MESSAGE,
@@ -38,5 +44,6 @@ const showErrorMessage = message => {
 
 export const courseActions = {
   getCourses,
-  createCourse
+  createCourse,
+  getCourseById
 };

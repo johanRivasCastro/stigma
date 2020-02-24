@@ -1,8 +1,13 @@
-import { FETCHED_ALL_COURSES, CREATED_COURSE } from "./course.types";
+import {
+  FETCHED_ALL_COURSES,
+  CREATED_COURSE,
+  REMOVE_NEW_COURSEID
+} from "./course.types";
 
 const initialState = {
   courses: [],
-  coursesPagination: {}
+  coursesPagination: {},
+  newCourseId: null
 };
 
 export const course = (state = initialState, action) => {
@@ -23,7 +28,14 @@ export const course = (state = initialState, action) => {
     case CREATED_COURSE:
       return {
         ...state,
+        newCourseId: action.course.id,
         courses: [...state.courses, action.course]
+      };
+
+    case REMOVE_NEW_COURSEID:
+      return {
+        ...state,
+        newCourseId: null
       };
 
     default: {

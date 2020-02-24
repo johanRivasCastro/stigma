@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CloseIcon from "@material-ui/icons/Close";
 import { withRouter } from "react-router-dom";
 import MuiDialogContent from "@material-ui/core/DialogContent";
@@ -7,6 +7,7 @@ import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import { connect } from "react-redux";
 import { courseActions } from "../../redux/course/course.action";
 import { ErrorMessage } from "../../components/common/errorMessage";
+import { REMOVE_NEW_COURSEID } from "../../redux/course/course.types";
 
 import {
   makeStyles,
@@ -67,8 +68,22 @@ const DialogActions = withStyles(theme => ({
   }
 }))(MuiDialogActions);
 
-const NewCourse = ({ open, handleClose, dispatch, currentUser }) => {
+const NewCourse = ({
+  open,
+  history,
+  handleClose,
+  dispatch,
+  currentUser,
+  newCourseId
+}) => {
   const [newCourse, setNewCourse] = useState({ name: "", description: "" });
+
+  useEffect(() => {
+    if (newCourseId) {
+      dispatch({ type: REMOVE_NEW_COURSEID });
+      history.push(`/courseDetails/${newCourseId}`);
+    }
+  }, [newCourseId]);
 
   const handleInputChange = e => {
     setNewCourse({
@@ -77,10 +92,18 @@ const NewCourse = ({ open, handleClose, dispatch, currentUser }) => {
     });
   };
 
+  console.log(newCourseId);
+
   const handleClickCreateCourse = e => {
     dispatch(
       courseActions.createCourse({ ...newCourse, user: { id: currentUser.id } })
     );
+    // console.log(newCourseId);
+    // if (newCourseId !== null) {
+    //   console.log("!!!!!!!!!!!!");
+    //   history.push(`/courseDetails/${newCourseId}`);
+    //   dispatch({ type: REMOVE_NEW_COURSEID });
+    // }
   };
 
   return (
@@ -143,7 +166,8 @@ const NewCourse = ({ open, handleClose, dispatch, currentUser }) => {
 
 const mapStateToProps = state => {
   return {
-    currentUser: state.authentication.currentUser
+    currentUser: state.authentication.currentUser,
+    newCourseId: state.course.newCourseId
   };
 };
 

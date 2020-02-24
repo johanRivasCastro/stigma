@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   makeStyles,
   Card,
@@ -11,6 +11,8 @@ import {
 } from "@material-ui/core";
 
 import courseImg from "../../assets/course.png";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 const useStyles = makeStyles({
   root: {
@@ -24,12 +26,16 @@ const useStyles = makeStyles({
   }
 });
 
-const Course = ({ name, description, photo }) => {
+const Course = ({ name, description, photo, id, history }) => {
   const classes = useStyles();
+
+  const handleClickSeeCourseDetails = id => {
+    history.push(`/courseDetails/${id}`);
+  };
 
   return (
     <Card className={classes.root}>
-      <CardActionArea>
+      <CardActionArea onClick={() => handleClickSeeCourseDetails(id)}>
         <CardMedia>
           <img
             className={classes.coursePhoto}
@@ -49,4 +55,16 @@ const Course = ({ name, description, photo }) => {
   );
 };
 
-export default Course;
+// const mapStateToProps = state => {
+//   return {
+//     courseId: state.course.newCourseId
+//   };
+// };
+
+const connectUserDetailsPage = withRouter(
+  connect(null, null, null, {
+    pure: false
+  })(Course)
+);
+
+export { connectUserDetailsPage as Course };

@@ -6,7 +6,7 @@ import { withRouter } from "react-router-dom";
 import User from "../components/users/user";
 import { Grid, Box, makeStyles } from "@material-ui/core";
 import Pagination from "react-js-pagination";
-import Course from "../components/courses/course";
+import { Course } from "../components/courses/course";
 import CoursesBar from "../components/courses/coursesBar";
 
 class Courses extends Component {

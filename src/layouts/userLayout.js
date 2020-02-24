@@ -8,7 +8,7 @@ import {
   Toolbar,
   List,
   CssBaseline,
-  ListItem,
+  MenuItem,
   ListItemIcon,
   ListItemText,
   Typography,
@@ -16,7 +16,6 @@ import {
   IconButton,
   Box,
   Menu,
-  MenuItem,
   fade,
   InputBase
 } from "@material-ui/core/";
@@ -148,7 +147,8 @@ const UserLayout = ({ component: Component, container, history, ...rest }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(true);
   const [roleDialogOpen, setRoleDialogOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selected, setSelected] = useState(-1);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -169,6 +169,11 @@ const UserLayout = ({ component: Component, container, history, ...rest }) => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const updateSelected = (selectedIndex, redirectPath) => {
+    setSelected(selectedIndex);
+    history.push(redirectPath);
   };
 
   const menuId = "primary-search-account-menu";
@@ -276,42 +281,44 @@ const UserLayout = ({ component: Component, container, history, ...rest }) => {
             <Divider />
             <List>
               {["All mail", "Trash", "Spam"].map((text, index) => (
-                <ListItem button key={text}>
+                <MenuItem button key={text}>
                   <ListItemIcon>
                     {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                   </ListItemIcon>
                   <ListItemText primary={text} />
-                </ListItem>
+                </MenuItem>
               ))}
 
-              <ListItem
+              <MenuItem
                 button
                 key="Courses"
-                onClick={() => history.push("/courses")}
+                onClick={() => updateSelected(1, "/courses")}
+                selected={selected === 1}
               >
                 <ListItemIcon>
                   <MenuBookIcon />
                 </ListItemIcon>
                 <ListItemText primary="Courses" />
-              </ListItem>
+              </MenuItem>
 
-              <ListItem
+              <MenuItem
                 button
                 key="Users"
-                onClick={() => history.push("/users")}
+                onClick={() => updateSelected(0, "/users")}
+                selected={selected === 0}
               >
                 <ListItemIcon>
                   <GroupIcon />
                 </ListItemIcon>
                 <ListItemText primary="Users" />
-              </ListItem>
+              </MenuItem>
 
-              <ListItem button key="Roles" onClick={handleRoleDialogOpen}>
+              <MenuItem button key="Roles" onClick={handleRoleDialogOpen}>
                 <ListItemIcon>
                   <GrainIcon />
                 </ListItemIcon>
                 <ListItemText primary="Roles" />
-              </ListItem>
+              </MenuItem>
             </List>
           </Drawer>
           <main className={classes.content}>
