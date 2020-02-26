@@ -3,7 +3,7 @@ import config from "../../config/config";
 
 const get = async apiEndpoint => {
   try {
-    const { data = [] } = await axios.get(config.baseUrl + apiEndpoint);
+    const { data } = await axios.get(config.baseUrl + apiEndpoint);
     return data;
   } catch (err) {
     console.log(err);
@@ -13,23 +13,21 @@ const get = async apiEndpoint => {
 
 const post = async (apiEndpoint, course) => {
   try {
-    const res = await axios.post(config.baseUrl + apiEndpoint, course);
-    return res;
+    const { data } = await axios.post(config.baseUrl + apiEndpoint, course);
+    return data;
   } catch (err) {
     console.log(err);
-    return err.response;
+    return err.response.data;
   }
 };
 
 const getById = async (apiEndpoint, id) => {
   try {
-    const { data = {} } = await axios.get(
-      `${config.baseUrl + apiEndpoint}/${id}`
-    );
+    const { data } = await axios.get(`${config.baseUrl + apiEndpoint}/${id}`);
     return data;
   } catch (err) {
     console.log(err);
-    return err.response;
+    return err.response.data;
   }
 };
 

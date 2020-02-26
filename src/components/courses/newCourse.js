@@ -92,8 +92,6 @@ const NewCourse = ({
     });
   };
 
-  console.log(newCourseId);
-
   const handleClickCreateCourse = e => {
     dispatch(
       courseActions.createCourse({ ...newCourse, user: { id: currentUser.id } })

@@ -17,27 +17,27 @@ const getRoles = () => dispatch => {
 };
 
 const createRole = role => dispatch => {
-  roleService.post(endPoint, role).then(role => {
-    if (role) {
+  roleService.post(endPoint, role).then(res => {
+    if (res.successful) {
       dispatch({
         type: CREATED_ROLE,
-        role: role
+        role: res.data
       });
     } else {
-      dispatch(showErrorMessage("this role allready exist"));
+      dispatch(showErrorMessage(res.errorMessage));
     }
   });
 };
 
 const deleteRole = roleID => dispatch => {
   roleService.deleteRole(endPoint, roleID).then(res => {
-    if (res) {
+    if (res.successful) {
       dispatch({
         type: DELETED_ROLE,
         deleted: roleID
       });
     } else {
-      dispatch(showErrorMessage("This role is asigned, it can't be removed"));
+      dispatch(showErrorMessage(res.errorMessage));
     }
   });
 };

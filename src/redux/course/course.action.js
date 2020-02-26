@@ -7,31 +7,34 @@ const endPoint = "courses/";
 const getCourses = (page, term = "") => dispatch => {
   courseService
     .get(`${endPoint}?pageNo=${page - 1}&pageSize=${15}&filterBy=${term}`)
-    .then(courses => {
+    .then(res => {
       dispatch({
         type: FETCHED_ALL_COURSES,
-        courses: courses
+        courses: res.data
       });
     });
 };
 
 const createCourse = course => dispatch => {
-  courseService.post(`${endPoint}`, course).then(response => {
-    if (response.status !== 201) {
-      dispatch(showErrorMessage("There is allready a course with this name"));
+  courseService.post(`${endPoint}`, course).then(res => {
+    if (!res.successful) {
+      dispatch(showErrorMessage(res.errorMessage));
     } else {
-      const { data } = response;
       dispatch({
         type: CREATED_COURSE,
-        course: data
+        course: res.data
       });
     }
   });
 };
 
 const getCourseById = courseId => dispatch => {
-  courseService.getById(`${endPoint}/${courseId}`).then(course => {
-    return course;
+  courseService.getById(`${endPoint}/${courseId}`).then(res => {
+    if (res.successful) {
+      return res.data;
+    } else {
+      dispatch(showErrorMessage(res.errorMessage));
+    }
   });
 };
 

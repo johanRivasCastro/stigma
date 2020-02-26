@@ -49,7 +49,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const CourseInfo = ({ classes, photo }) => {
+const CourseInfo = ({ classes, photo, courseInf }) => {
+  const [courseInfo, setCourseInfo] = useState(courseInf);
+
+  useEffect(() => {
+    setCourseInfo(courseInf);
+  }, [courseInf]);
+
   return (
     <Box className={classes.boxInfo}>
       <Grid container direction="row" spacing={3} justify="center">
@@ -89,13 +95,17 @@ const CourseInfo = ({ classes, photo }) => {
                 name="name"
                 label="Name"
                 // onChange={handleInputChange}
-                value=""
+                value={courseInfo.name || ""}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <Box component="fieldset" borderColor="transparent">
                 <Typography component="legend">Course Rating</Typography>
-                <Rating name="read-only" value={3} readOnly />
+                <Rating
+                  name="read-only"
+                  value={courseInfo.rate || 0}
+                  readOnly
+                />
               </Box>
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -108,7 +118,7 @@ const CourseInfo = ({ classes, photo }) => {
                 required
                 name="description"
                 label="Description"
-                //   value={newCourse.description}
+                value={courseInfo.description || ""}
                 //   onChange={handleInputChange}
               />
             </Grid>
@@ -135,7 +145,7 @@ const CourseInfo = ({ classes, photo }) => {
                 required
                 name="description"
                 label="Created"
-                //   value={newCourse.description}
+                value={courseInfo.created || ""}
                 //   onChange={handleInputChange}
               />
             </Grid>
@@ -186,12 +196,13 @@ function a11yProps(index) {
 const CourseDetails = ({ courseId }) => {
   const classes = useStyles();
 
-  const [course, setCourse] = useState({});
+  const [courseInfo, setCourseInfo] = useState({});
 
   useEffect(() => {
     courseService.getById("courses", courseId).then(res => {
       if (res) {
-        console.log(res);
+        const { courseContents, ...courseInf } = res.data;
+        setCourseInfo(courseInf);
       }
     });
   }, []);
@@ -225,7 +236,9 @@ const CourseDetails = ({ courseId }) => {
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>
-            <CourseInfo classes={classes} />
+            {courseInfo && (
+              <CourseInfo classes={classes} courseInf={courseInfo} />
+            )}
           </TabPanel>
           <TabPanel value={value} index={1}>
             Item Two
