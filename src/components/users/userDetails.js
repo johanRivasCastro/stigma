@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
     cursor: "pointer"
   },
   userPhoto: {
-    width: "225px",
+    width: "190px",
     height: "auto"
   },
   detailsContainer: {
