@@ -20,6 +20,12 @@ const login = credentials => dispatch => {
   });
 };
 
+const logOut = () => dispatch => {
+  localStorage.removeItem("jtoken");
+  setAuthorizationToken(false);
+  dispatch(setCurrentUser({}));
+};
+
 const setCurrentUser = user => {
   return {
     type: SET_CURRENT_USER,
@@ -36,5 +42,6 @@ const showErrorMessage = message => {
 
 export const loginActions = {
   login,
+  logOut,
   setCurrentUser
 };

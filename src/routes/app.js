@@ -5,7 +5,7 @@ import {
   Route,
   Switch
 } from "react-router-dom";
-import UserLayout from "../layouts/userLayout";
+import { UserLayout } from "../layouts/userLayout";
 import { Users } from "../containers/Users";
 import { SignIn } from "../login/signIn";
 import { Courses } from "../containers/courses";

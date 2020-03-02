@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import {
   makeStyles,
@@ -33,7 +33,9 @@ import SearchIcon from "@material-ui/icons/Search";
 
 import { withRouter, Route } from "react-router-dom";
 import { RoleDialog } from "../components/users/role";
+import { connect } from "react-redux";
 import GroupIcon from "@material-ui/icons/Group";
+import { loginActions } from "../redux/auth/auth.action";
 
 const drawerWidth = 240;
 
@@ -142,13 +144,26 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UserLayout = ({ component: Component, container, history, ...rest }) => {
+const UserLayout = ({
+  component: Component,
+  container,
+  dispatch,
+  loggedIn,
+  history,
+  ...rest
+}) => {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = useState(true);
   const [roleDialogOpen, setRoleDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selected, setSelected] = useState(-1);
+
+  useEffect(() => {
+    if (!loggedIn) {
+      history.push("/login");
+    }
+  }, [loggedIn]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -176,6 +191,10 @@ const UserLayout = ({ component: Component, container, history, ...rest }) => {
     history.push(redirectPath);
   };
 
+  const handleClickLogOut = () => {
+    dispatch(loginActions.logOut());
+  };
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -188,7 +207,7 @@ const UserLayout = ({ component: Component, container, history, ...rest }) => {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleClickLogOut}>Logout</MenuItem>
     </Menu>
   );
 
@@ -338,4 +357,16 @@ const UserLayout = ({ component: Component, container, history, ...rest }) => {
   );
 };
 
-export default withRouter(UserLayout);
+const mapStateToProps = state => {
+  return {
+    loggedIn: state.authentication.loggedIn
+  };
+};
+
+const connectLayoutPage = withRouter(
+  connect(mapStateToProps, null, null, {
+    pure: false
+  })(UserLayout)
+);
+
+export { connectLayoutPage as UserLayout };

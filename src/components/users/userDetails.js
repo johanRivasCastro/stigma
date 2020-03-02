@@ -12,7 +12,8 @@ import {
   CardMedia,
   Card,
   FormControlLabel,
-  Switch
+  Switch,
+  Fab
 } from "@material-ui/core/";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
@@ -20,6 +21,7 @@ import { connect } from "react-redux";
 import config from "../../config/config";
 import { TextField } from "@material-ui/core";
 import userImg from "../../assets/user.jfif";
+import AddIcon from "@material-ui/icons/Add";
 
 import { userActions } from "../../redux/user/user.action";
 
@@ -33,8 +35,9 @@ const useStyles = makeStyles(theme => ({
     cursor: "pointer"
   },
   userPhoto: {
-    width: "190px",
-    height: "auto"
+    width: "auto",
+    height: "auto",
+    maxHeight: "170px"
   },
   detailsContainer: {
     margin: "50px auto",
@@ -70,6 +73,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
   const [user, setUser] = useState({});
   const [edit, setEdit] = useState(false);
   const [userRoles, setUserRoles] = useState(new Map());
+  const [changePhoto, setChangePhoto] = useState(null);
 
   useEffect(() => {
     if (id) {
@@ -117,6 +121,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
 
   const handleClickEdit = () => {
     setEdit(!edit);
+    setChangePhoto(null)
   };
 
   const handleInputChange = e => {
@@ -141,6 +146,10 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
     userRoles.set(e.target.name, e.target.checked);
     setUserRoles(new Map(userRoles));
   };
+
+  const handleFileChange = e =>{
+    setChangePhoto(e.target.value)
+  }
 
   return (
     <div>
@@ -189,6 +198,34 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                           : userImg
                       }
                     />
+                    <Box display="flex" flexDirection="row" mt={1}>
+                      <Box>
+                        <label htmlFor="upload-photo">
+                          <input
+                            style={{ display: "none" }}
+                            id="upload-photo"
+                            name="upload-photo"
+                            type="file"
+                            disabled={!edit}
+                            onChange = {handleFileChange}
+                          />
+                          <Fab
+                            color="secondary"
+                            size="small"
+                            component="span"
+                            aria-label="add"
+                            variant="extended"
+                          >
+                            <AddIcon />
+                          </Fab>
+                        </label>
+                      </Box>
+                      <Box>
+                        <Typography>
+                          {changePhoto ? changePhoto.replace(/^.*[\\\/]/, '') : null}
+                        </Typography>
+                      </Box>
+                    </Box>
                   </CardMedia>
                 </Grid>
                 <Grid item xs={12} sm={8}>

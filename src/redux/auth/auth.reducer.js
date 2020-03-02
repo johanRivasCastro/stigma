@@ -2,7 +2,7 @@ import { SET_CURRENT_USER } from "./auth.types";
 
 const initialState = {
   loggedIn: false,
-  currentUser: {}
+  currentUser: null
 };
 
 export const authentication = (state = initialState, action) => {
@@ -10,7 +10,7 @@ export const authentication = (state = initialState, action) => {
     case SET_CURRENT_USER: {
       return {
         ...state,
-        loggedIn: true,
+        loggedIn: action.currentUser ? true : false,
         currentUser: action.currentUser
       };
     }
