@@ -23,7 +23,7 @@ const login = credentials => dispatch => {
 const logOut = () => dispatch => {
   localStorage.removeItem("jtoken");
   setAuthorizationToken(false);
-  dispatch(setCurrentUser({}));
+  dispatch(setCurrentUser(null));
 };
 
 const setCurrentUser = user => {
