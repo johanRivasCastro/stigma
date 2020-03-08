@@ -9,7 +9,7 @@ import UserLayout from "../layouts/userLayout";
 import { Users } from "../containers/Users";
 import { SignIn } from "../login/signIn";
 import { Courses } from "../containers/courses";
-import { CourseDetails } from "../components/courses/courseDetails";
+import { CourseDetails } from "../components/courses/courseDetails/courseDetails";
 
 const App = () => {
   return (

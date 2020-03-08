@@ -31,6 +31,16 @@ const post = async (apiEndpoint, user) => {
   }
 };
 
+// const postPhoto = async (apiEndpoint, resource) => {
+//   try {
+//     const { data } = await axios.post(config.baseUrl + apiEndpoint, user);
+//     return data;
+//   } catch (err) {
+//     console.log(err);
+//     return err.response.data;
+//   }
+// };
+
 export const UserService = {
   get,
   put,

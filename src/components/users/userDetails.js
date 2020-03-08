@@ -12,10 +12,12 @@ import {
   CardMedia,
   Card,
   FormControlLabel,
-  Switch
+  Switch,
+  Fab
 } from "@material-ui/core/";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import AddIcon from "@material-ui/icons/Add";
 import { connect } from "react-redux";
 import config from "../../config/config";
 import { TextField } from "@material-ui/core";
@@ -33,8 +35,9 @@ const useStyles = makeStyles(theme => ({
     cursor: "pointer"
   },
   userPhoto: {
-    width: "200px",
-    height: "auto"
+    width: "190px",
+    height: "auto",
+    marginBottom: "5px"
   },
   detailsContainer: {
     margin: "50px auto",
@@ -70,6 +73,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
   const [user, setUser] = useState({});
   const [edit, setEdit] = useState(false);
   const [userRoles, setUserRoles] = useState(new Map());
+  const [newPhoto, setNewPhoto] = useState(null);
 
   useEffect(() => {
     if (id) {
@@ -117,6 +121,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
 
   const handleClickEdit = () => {
     setEdit(!edit);
+    setNewPhoto(null);
   };
 
   const handleInputChange = e => {
@@ -140,6 +145,10 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
     if (!edit) return;
     userRoles.set(e.target.name, e.target.checked);
     setUserRoles(new Map(userRoles));
+  };
+
+  const handlePhotoChange = e => {
+    setNewPhoto(e.target.value);
   };
 
   return (
@@ -189,6 +198,32 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                           : userImg
                       }
                     />
+                    <Box display="flex" flexDirection="row">
+                      <Box>
+                        <label htmlFor="upload-photo">
+                          <input
+                            style={{ display: "none" }}
+                            id="upload-photo"
+                            name="upload-photo"
+                            type="file"
+                            onChange={handlePhotoChange}
+                            disabled={!edit}
+                          />
+                          <Fab
+                            color="secondary"
+                            size="small"
+                            component="span"
+                            aria-label="add"
+                            variant="extended"
+                          >
+                            <AddIcon />
+                          </Fab>
+                        </label>
+                      </Box>
+                      <Box ml={1}>
+                        {newPhoto ? newPhoto.replace(/^.*[\\\/]/, "") : null}
+                      </Box>
+                    </Box>
                   </CardMedia>
                 </Grid>
                 <Grid item xs={12} sm={8}>
@@ -226,6 +261,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                         name="email"
                         label="Email"
                         type="email"
+                        disabled
                         value={user.email || ""}
                         onChange={handleInputChange}
                       />
@@ -239,6 +275,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                         pattern=".{13,13}"
                         name="identification"
                         label="Identification"
+                        disabled
                         value={user.identification || ""}
                         onChange={handleInputChange}
                       />
@@ -267,6 +304,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                             name=""
                             label="Started"
                             value={user.created || ""}
+                            disabled
                             onChange={handleInputChange}
                           />
                         </Grid>
@@ -278,6 +316,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                             required
                             name=""
                             label="Last login"
+                            disabled
                             value={
                               user.lastLogin || "The user has not logged in yed"
                             }

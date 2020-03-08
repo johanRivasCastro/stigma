@@ -12,7 +12,7 @@ import {
 import config from "../../config/config";
 import { UserDetails } from "../users/userDetails";
 
-import userImg from "../../assets/user.jfif"
+import userImg from "../../assets/user.jfif";
 
 const useStyles = makeStyles({
   card: {
@@ -29,9 +29,10 @@ const useStyles = makeStyles({
     fontSize: "100px",
     color: "#3f51b5"
   },
-  userPhoto:{
-    width:"110px",
-    height:"auto"
+  userPhoto: {
+    width: "auto",
+    height: "auto",
+    maxHeight: "110px"
   }
 });
 
@@ -53,16 +54,16 @@ const User = ({ name, email, photo, id }) => {
         <CardActionArea onClick={() => handleClickSeeUserDetails(id)}>
           <Grid container>
             <Grid item xs={12} sm={4}>
-               <CardMedia>
-                    <img
-                      className={classes.userPhoto}
-                      src={
-                        photo
-                          ? `${config.baseUrl + uploadsEndPoint + photo}`
-                          : userImg
-                      }
-                    />       
-                  </CardMedia>
+              <CardMedia>
+                <img
+                  className={classes.userPhoto}
+                  src={
+                    photo
+                      ? `${config.baseUrl + uploadsEndPoint + photo}`
+                      : userImg
+                  }
+                />
+              </CardMedia>
             </Grid>
             <Grid item sm={8}>
               <CardContent>
