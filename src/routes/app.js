@@ -5,19 +5,21 @@ import {
   Route,
   Switch
 } from "react-router-dom";
-import UserLayout from "../layouts/userLayout";
+import { UserLayout } from "../layouts/userLayout";
 import { Users } from "../containers/Users";
 import { SignIn } from "../login/signIn";
+import { ResetPassword } from "../login/resetPassword";
 import { Courses } from "../containers/courses";
 import { CourseDetails } from "../components/courses/courseDetails/courseDetails";
+import { requireAuth } from "../helpers";
 
 const App = () => {
   return (
     <Router>
       <Switch>
-        <UserLayout path="/users" component={Users} />
+        <UserLayout path="/users" component={requireAuth(Users)} />
         <UserLayout path="/courses" component={Courses} />
-
+        <Route path="/resetPassword" component={ResetPassword} />
         <UserLayout
           exact
           path="/courseDetails/:courseId"

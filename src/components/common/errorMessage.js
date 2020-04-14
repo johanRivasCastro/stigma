@@ -17,7 +17,7 @@ const ErrorMessage = ({ errorMessage, dispatch }) => {
   }, [errorMessage]);
 
   return (
-    <div>
+    <div style={{ width: "100%" }}>
       {showMessage && (
         <Alert severity="error">
           <AlertTitle>Error</AlertTitle>

@@ -13,7 +13,7 @@ import {
   Card,
   FormControlLabel,
   Switch,
-  Fab
+  Fab,
 } from "@material-ui/core/";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
@@ -24,36 +24,39 @@ import { TextField } from "@material-ui/core";
 import userImg from "../../assets/user.jfif";
 
 import { userActions } from "../../redux/user/user.action";
+import { session } from "../../helpers/session";
 
-const useStyles = makeStyles(theme => ({
+import { ErrorMessage } from "../common/errorMessage";
+
+const useStyles = makeStyles((theme) => ({
   appBar: {
-    position: "relative"
+    position: "relative",
   },
   title: {
     marginLeft: theme.spacing(2),
     flex: 1,
-    cursor: "pointer"
+    cursor: "pointer",
   },
   userPhoto: {
-    width: "190px",
+    width: "auto",
     height: "auto",
-    marginBottom: "5px"
+    maxHeight: "170px",
   },
   detailsContainer: {
     margin: "50px auto",
     width: "90%",
     maxWidth: "1000px",
-    color: "white"
+    color: "white",
   },
   card: {
     width: "100%",
     height: "100%",
-    padding: "15px"
+    padding: "15px",
   },
   icon: {
     fontSize: "200px",
-    color: "#3f51b5"
-  }
+    color: "#3f51b5",
+  },
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -66,68 +69,107 @@ const Checkbox = ({ type = "checkbox", name, checked = false, onChange }) => {
   );
 };
 
-const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
+const UserDetails = ({
+  open,
+  setOpen,
+  userDetails = {},
+  dispatch,
+  roles,
+  successMessage,
+}) => {
   const classes = useStyles();
   const uploadsEndPoint = "uploads/";
 
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(userDetails);
   const [edit, setEdit] = useState(false);
   const [userRoles, setUserRoles] = useState(new Map());
-  const [newPhoto, setNewPhoto] = useState(null);
+  const [changePhoto, setChangePhoto] = useState(null);
+  const [isCurrentUser, setIsCurrentUser] = useState(false);
 
   useEffect(() => {
-    if (id) {
-      const currentUser = users.filter(user => {
-        return user.id === id;
-      });
-      setUser(...currentUser);
-      const uRoles = new Map();
-      roles.forEach(role => {
-        uRoles.set(
-          role.authority,
-          currentUser[0].roles.some(r => r.authority === role.authority)
-        );
-      });
-      setUserRoles(uRoles);
-    } else {
+    if (!isThereUser()) {
       setEdit(true);
+    } else {
+      if (user.id === session.getUser().id) {
+        setIsCurrentUser(true);
+      }
+      setupUserRoles();
     }
-  }, []);
+
+    if (successMessage.success) {
+      resetForm();
+    }
+  }, [successMessage]);
+
+  const isThereUser = () => {
+    return Object.entries(userDetails).length > 0;
+  };
+
+  const setupUserRoles = () => {
+    const uRoles = new Map();
+    roles.forEach((role) => {
+      uRoles.set(
+        role.authority,
+        user.roles.some((r) => r.authority === role.authority)
+      );
+    });
+    setUserRoles(uRoles);
+  };
+
+  const resetForm = () => {
+    if (!isThereUser()) {
+      setUser({});
+    } else {
+      setEdit(!edit);
+    }
+  };
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const handleOnSubmit = e => {
+  const handleOnSubmit = (e) => {
     e.preventDefault();
+    let selectedRoles = filterSelectedRoles();
+
+    if (isThereUser()) {
+      dispatch(userActions.editUser({ ...user, roles: selectedRoles }));
+    } else {
+      const found = selectedRoles.findIndex((r) => {
+        return r.id === 1;
+      });
+      if (found === -1) {
+        selectedRoles.push({ id: 1 });
+      }
+
+      dispatch(userActions.createUser({ ...user, roles: selectedRoles }));
+    }
+  };
+
+  const filterSelectedRoles = () => {
     let selectedRoles = [];
 
     for (let [key, value] of userRoles.entries()) {
       if (value) {
-        const matched = roles.find(role => {
+        const matched = roles.find((role) => {
           return role.authority === key;
         });
         if (matched) selectedRoles.push({ id: matched.id });
       }
     }
 
-    if (id) {
-      dispatch(userActions.editUser({ ...user, roles: selectedRoles }));
-    } else {
-      dispatch(userActions.createUser({ ...user, roles: selectedRoles }));
-    }
-    setOpen(false);
+    return selectedRoles;
   };
 
   const handleClickEdit = () => {
     setEdit(!edit);
-    setNewPhoto(null);
+    setChangePhoto(null);
   };
 
-  const handleInputChange = e => {
+  const handleInputChange = (e) => {
     if (!edit) return;
     const {
-      target: { name, value }
+      target: { name, value },
     } = e;
 
     let nValue = value;
@@ -137,18 +179,18 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
 
     setUser({
       ...user,
-      [name]: nValue
+      [name]: nValue,
     });
   };
 
-  const handleCheckRoles = e => {
+  const handleCheckRoles = (e) => {
     if (!edit) return;
     userRoles.set(e.target.name, e.target.checked);
     setUserRoles(new Map(userRoles));
   };
 
-  const handlePhotoChange = e => {
-    setNewPhoto(e.target.value);
+  const handleFileChange = (e) => {
+    setChangePhoto(e.target.files[0]);
   };
 
   return (
@@ -161,23 +203,18 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
       >
         <AppBar className={classes.appBar}>
           <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={handleClose}
-              aria-label="close"
-            >
-              <CloseIcon />
-            </IconButton>
-            {/* <Typography
-              variant="h6"
-              className={classes.title}
-              onClick={handleClose}
-            >
-              Cancel
-            </Typography> */}
+            <Box mr={2}>
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={handleClose}
+                aria-label="close"
+              >
+                <CloseIcon />
+              </IconButton>
+            </Box>
 
-            {id && (
+            {isThereUser() && (
               <Button autoFocus color="inherit" onClick={handleClickEdit}>
                 {!edit ? "Edit" : "Cancel"}
               </Button>
@@ -188,42 +225,69 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
           <form onSubmit={handleOnSubmit}>
             <Card className={classes.card}>
               <Grid container direction="row" spacing={3}>
+                <ErrorMessage />
                 <Grid item xs={12} sm={3}>
                   <CardMedia>
                     <img
                       className={classes.userPhoto}
                       src={
-                        user.photo
+                        isThereUser() && user.photo
                           ? `${config.baseUrl + uploadsEndPoint + user.photo}`
                           : userImg
                       }
                     />
-                    <Box display="flex" flexDirection="row">
+                    {isCurrentUser && (
                       <Box>
-                        <label htmlFor="upload-photo">
-                          <input
-                            style={{ display: "none" }}
-                            id="upload-photo"
-                            name="upload-photo"
-                            type="file"
-                            onChange={handlePhotoChange}
-                            disabled={!edit}
-                          />
-                          <Fab
-                            color="secondary"
-                            size="small"
-                            component="span"
-                            aria-label="add"
-                            variant="extended"
-                          >
-                            <AddIcon />
-                          </Fab>
-                        </label>
+                        <Box display="flex" flexDirection="row" mt={1}>
+                          <Box>
+                            <label htmlFor="upload-photo">
+                              <input
+                                style={{ display: "none" }}
+                                id="upload-photo"
+                                name="upload-photo"
+                                type="file"
+                                disabled={!edit}
+                                onChange={handleFileChange}
+                              />
+                              <Fab
+                                color="secondary"
+                                size="small"
+                                component="span"
+                                aria-label="add"
+                                variant="extended"
+                              >
+                                <AddIcon />
+                              </Fab>
+                            </label>
+                          </Box>
+
+                          <Box ml={1}>
+                            <Typography>
+                              {changePhoto ? changePhoto.name : null}
+                            </Typography>
+                          </Box>
+                        </Box>
+                        <Box>
+                          {changePhoto && (
+                            <Button
+                              autoFocus
+                              color="primary"
+                              onClick={() => {
+                                dispatch(
+                                  userActions.changeUserPhoto(
+                                    user.id,
+                                    changePhoto
+                                  )
+                                );
+                                setChangePhoto(null);
+                              }}
+                            >
+                              Save
+                            </Button>
+                          )}
+                        </Box>
                       </Box>
-                      <Box ml={1}>
-                        {newPhoto ? newPhoto.replace(/^.*[\\\/]/, "") : null}
-                      </Box>
-                    </Box>
+                    )}
                   </CardMedia>
                 </Grid>
                 <Grid item xs={12} sm={8}>
@@ -261,7 +325,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                         name="email"
                         label="Email"
                         type="email"
-                        disabled
+                        disabled={isThereUser() ? true : false}
                         value={user.email || ""}
                         onChange={handleInputChange}
                       />
@@ -275,7 +339,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                         pattern=".{13,13}"
                         name="identification"
                         label="Identification"
-                        disabled
+                        disabled={isThereUser() ? true : false}
                         value={user.identification || ""}
                         onChange={handleInputChange}
                       />
@@ -293,7 +357,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                       />
                     </Grid>
 
-                    {id && (
+                    {isThereUser() && (
                       <>
                         {" "}
                         <Grid item xs={12} sm={6}>
@@ -361,7 +425,7 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
                       <Box display="flex" justifyContent="flex-end">
                         {edit ? (
                           <Button autoFocus color="primary" type="submit">
-                            {id ? "Save" : "Create"}
+                            {isThereUser() ? "Save" : "Create"}
                           </Button>
                         ) : null}
                       </Box>
@@ -377,15 +441,16 @@ const UserDetails = ({ open, setOpen, id, users, dispatch, roles }) => {
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     users: state.user.users,
-    roles: state.role.roles
+    roles: state.role.roles,
+    successMessage: state.alertInfo.successMessage,
   };
 };
 
 const connectUserDetailsPage = connect(mapStateToProps, null, null, {
-  pure: false
+  pure: false,
 })(UserDetails);
 
 export { connectUserDetailsPage as UserDetails };

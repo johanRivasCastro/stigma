@@ -49,10 +49,11 @@ class Users extends Component {
           {users.map((user, i) => (
             <User
               key={i}
-              name={user.name}
-              lastname={user.lastname}
-              email={user.email}
-              photo={user.photo}
+              // name={user.name}
+              // lastname={user.lastname}
+              // email={user.email}
+              // photo={user.photo}
+              user={user}
               id={user.id}
             />
           ))}
@@ -69,7 +70,6 @@ class Users extends Component {
             onChange={this.handlePageChange}
           />
         </Box>
-        {/* <SuccessMessage /> */}
       </Grid>
     );
   }

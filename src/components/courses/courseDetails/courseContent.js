@@ -15,35 +15,35 @@ import {
   Switch,
   Button,
   Input,
-  Fab
+  Fab,
 } from "@material-ui/core/";
 import { connect } from "react-redux";
 import { courseService } from "../../../redux/course/course.service";
 import PropTypes from "prop-types";
 import CourseInfo from "./courseInfo";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   detailsContainer: {
     margin: "50px auto",
     width: "95%",
     maxWidth: "1100px",
-    color: "white"
+    color: "white",
   },
   card: {
     width: "100%",
-    height: "100%"
+    height: "100%",
   },
   coursePhoto: {
     width: "100%",
-    maxHeight: "200px"
+    maxHeight: "200px",
   },
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   boxInfo: {
-    width: "100%"
-  }
+    width: "100%",
+  },
 }));
 
 function TabPanel(props) {
@@ -66,13 +66,13 @@ function TabPanel(props) {
 TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired
+  value: PropTypes.any.isRequired,
 };
 
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 }
 
@@ -82,7 +82,7 @@ const CourseDetails = ({ courseId }) => {
   const [courseInfo, setCourseInfo] = useState({});
 
   useEffect(() => {
-    courseService.getById("courses", courseId).then(res => {
+    courseService.getById("courses", courseId).then((res) => {
       if (res.successful) {
         const { courseContents, ...courseInf } = res.data;
         setCourseInfo(courseInf);
@@ -136,7 +136,7 @@ const CourseDetails = ({ courseId }) => {
 };
 
 const connectUserDetailsPage = connect(null, null, null, {
-  pure: false
+  pure: false,
 })(CourseDetails);
 
 export { connectUserDetailsPage as CourseDetails };

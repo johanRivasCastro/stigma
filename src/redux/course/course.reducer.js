@@ -1,13 +1,13 @@
 import {
   FETCHED_ALL_COURSES,
   CREATED_COURSE,
-  REMOVE_NEW_COURSEID
+  REMOVE_NEW_COURSEID,
 } from "./course.types";
 
 const initialState = {
   courses: [],
   coursesPagination: {},
-  newCourseId: null
+  newCourseId: null,
 };
 
 export const course = (state = initialState, action) => {
@@ -21,26 +21,26 @@ export const course = (state = initialState, action) => {
         coursesPagination: {
           totalPages: totalPages,
           itemsCountPerPage: size,
-          totalItemsCount: totalElements
-        }
+          totalItemsCount: totalElements,
+        },
       };
 
     case CREATED_COURSE:
       return {
         ...state,
         newCourseId: action.course.id,
-        courses: [...state.courses, action.course]
+        courses: [...state.courses, action.course],
       };
 
     case REMOVE_NEW_COURSEID:
       return {
         ...state,
-        newCourseId: null
+        newCourseId: null,
       };
 
     default: {
       return {
-        ...state
+        ...state,
       };
     }
   }

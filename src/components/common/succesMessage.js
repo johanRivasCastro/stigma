@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Box } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { REMOVE_SUCCESS_MESSAGE } from "../../redux/alert.types";
@@ -42,14 +42,20 @@ const SuccessMessage = ({ successMessage, dispatch }) => {
   };
 
   return (
-    <div className={classes.root}>
-      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+    <Box className={classes.root}>
+      <Snackbar
+        open={open}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right"
+        }}
+      >
         <Alert onClose={handleClose} severity="success">
-          This is a success message!
+          {successMessage.message}
         </Alert>
       </Snackbar>
-      <Alert severity="success">This is a success message!</Alert>
-    </div>
+    </Box>
   );
 };
 

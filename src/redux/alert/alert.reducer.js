@@ -1,19 +1,19 @@
 import {
   ERROR_MESSAGE,
   REMOVE_ERROR,
-  SET_SUCCESS_MESSAGE,
-  REMOVE_SUCCESS_MESSAGE
+  SUCCESS_MESSAGE,
+  REMOVE_SUCCESS_MESSAGE,
 } from "../alert.types";
 
 const initialState = {
   errorMessage: {
     error: false,
-    message: ""
+    message: "",
   },
   successMessage: {
     success: false,
-    message: ""
-  }
+    message: "",
+  },
 };
 
 export const alertInfo = (state = initialState, action) => {
@@ -23,8 +23,8 @@ export const alertInfo = (state = initialState, action) => {
         ...state,
         errorMessage: {
           error: true,
-          message: action.message
-        }
+          message: action.message,
+        },
       };
     }
 
@@ -33,18 +33,18 @@ export const alertInfo = (state = initialState, action) => {
         ...state,
         errorMessage: {
           error: false,
-          message: ""
-        }
+          message: "",
+        },
       };
     }
 
-    case SET_SUCCESS_MESSAGE: {
+    case SUCCESS_MESSAGE: {
       return {
         ...state,
         successMessage: {
           success: true,
-          successMessage: action.message
-        }
+          message: action.message,
+        },
       };
     }
 
@@ -53,8 +53,8 @@ export const alertInfo = (state = initialState, action) => {
         ...state,
         successMessage: {
           success: false,
-          successMessage: ""
-        }
+          successMessage: "",
+        },
       };
     }
     default: {

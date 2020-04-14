@@ -8,14 +8,13 @@ import { Provider } from "react-redux";
 import reducer from "./redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { setAuthorizationToken } from "./helpers";
-import {loginActions} from "./redux/auth/auth.action";
-import {session} from "./helpers"
+import { session, setAuthorizationToken } from "./helpers";
+import { loginActions } from "./redux/auth/auth.action";
 
 const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk)));
 
 if (localStorage.getItem("jtoken")) {
-  setAuthorizationToken(localStorage.getItem("jtoken"));
+  setAuthorizationToken(session.getToken());
   store.dispatch(loginActions.setCurrentUser(session.getUser()));
 }
 

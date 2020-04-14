@@ -1,3 +1,4 @@
 export * from "./history";
 export * from "./session";
-export * from "./setAuthorizationToken";
+export * from "./api";
+export * from "./requireAuth";

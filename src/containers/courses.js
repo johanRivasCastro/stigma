@@ -4,7 +4,7 @@ import { courseActions } from "../redux/course/course.action";
 
 import { withRouter } from "react-router-dom";
 import User from "../components/users/user";
-import { Grid, Box, makeStyles } from "@material-ui/core";
+import { Grid, Box, makeStyles, Typography } from "@material-ui/core";
 import Pagination from "react-js-pagination";
 import { Course } from "../components/courses/course";
 import CoursesBar from "../components/courses/coursesBar";
@@ -46,14 +46,23 @@ class Courses extends Component {
       <Grid container direction="column">
         <CoursesBar setTerm={this.setFilter} />
         <Grid container direction="row">
-          {courses.map((course, i) => (
-            <Course
-              key={i}
-              name={course.name}
-              id={course.id}
-              description={course.description}
-            />
-          ))}
+          {courses.length > 0 ? (
+            courses.map((course, i) => (
+              <Course
+                key={i}
+                name={course.name}
+                id={course.id}
+                description={course.description}
+              />
+            ))
+          ) : (
+            <Box
+              className="d-flex justify-content-center m-5"
+              style={{ width: "100%", color: "#3F51B5" }}
+            >
+              <Typography>Yout have't add any course yed</Typography>
+            </Box>
+          )}
         </Grid>
         <Box className="d-flex justify-content-center">
           <Pagination

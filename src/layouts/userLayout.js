@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import {
   makeStyles,
@@ -17,14 +17,15 @@ import {
   Box,
   Menu,
   fade,
-  InputBase
+  InputBase,
+  Avatar,
 } from "@material-ui/core/";
 
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import GrainIcon from "@material-ui/icons/Grain";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
-import AccountCircle from "@material-ui/icons/AccountCircle";
+import PersonIcon from "@material-ui/icons/Person";
 
 import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -33,89 +34,97 @@ import SearchIcon from "@material-ui/icons/Search";
 
 import { withRouter, Route } from "react-router-dom";
 import { RoleDialog } from "../components/users/role";
+import { connect } from "react-redux";
 import GroupIcon from "@material-ui/icons/Group";
+import { loginActions } from "../redux/auth/auth.action";
+
+import config from "../config/config";
+import { UserDetails } from "../components/users/userDetails";
+import { session } from "../helpers/session";
+import { SuccessMessage } from "../components/common/succesMessage";
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex"
+    display: "flex",
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
+      duration: theme.transitions.duration.leavingScreen,
+    }),
   },
   appBarShift: {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   menuButton: {
-    marginRight: 36
+    marginRight: 36,
   },
   hide: {
-    display: "none"
+    display: "none",
   },
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
-    whiteSpace: "nowrap"
+    whiteSpace: "nowrap",
   },
   drawerOpen: {
     width: drawerWidth,
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   drawerClose: {
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
+      duration: theme.transitions.duration.leavingScreen,
     }),
     overflowX: "hidden",
     width: theme.spacing(7) + 1,
     [theme.breakpoints.up("sm")]: {
-      width: theme.spacing(9) + 1
-    }
+      width: theme.spacing(9) + 1,
+    },
   },
   toolbar: {
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",
     padding: theme.spacing(0, 1),
-    ...theme.mixins.toolbar
+    ...theme.mixins.toolbar,
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
   },
   toolbarBox: {
     width: "100%",
-    paddingRight: "20px"
+    paddingRight: "20px",
   },
   accountCircle: {
-    fontSize: "40px"
+    fontSize: "48px",
+    cursor: "pointer",
   },
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 0.15),
     "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25)
+      backgroundColor: fade(theme.palette.common.white, 0.25),
     },
     marginLeft: 0,
     width: "100%",
     [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(1),
-      width: "auto"
-    }
+      width: "auto",
+    },
   },
   searchIcon: {
     width: theme.spacing(7),
@@ -124,10 +133,10 @@ const useStyles = makeStyles(theme => ({
     pointerEvents: "none",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   inputRoot: {
-    color: "inherit"
+    color: "inherit",
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 7),
@@ -136,19 +145,30 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up("sm")]: {
       width: 150,
       "&:focus": {
-        width: 200
-      }
-    }
-  }
+        width: 200,
+      },
+    },
+  },
 }));
 
-const UserLayout = ({ component: Component, container, history, ...rest }) => {
+const UserLayout = ({
+  component: Component,
+  container,
+  dispatch,
+  loggedIn,
+  history,
+  users,
+  currentUser,
+  ...rest
+}) => {
+  const uploadsEndPoint = "uploads/";
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = useState(true);
   const [roleDialogOpen, setRoleDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selected, setSelected] = useState(-1);
+  const [openProfile, setOpenProfile] = useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -163,7 +183,7 @@ const UserLayout = ({ component: Component, container, history, ...rest }) => {
   };
 
   const isMenuOpen = Boolean(anchorEl);
-  const handleProfileMenuOpen = event => {
+  const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -174,6 +194,15 @@ const UserLayout = ({ component: Component, container, history, ...rest }) => {
   const updateSelected = (selectedIndex, redirectPath) => {
     setSelected(selectedIndex);
     history.push(redirectPath);
+  };
+
+  const handleClickLogOut = () => {
+    dispatch(loginActions.logOut());
+  };
+
+  const handleClickSeeProfile = () => {
+    setAnchorEl(null);
+    setOpenProfile(true);
   };
 
   const menuId = "primary-search-account-menu";
@@ -187,21 +216,21 @@ const UserLayout = ({ component: Component, container, history, ...rest }) => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleClickSeeProfile}>Profile</MenuItem>
+      <MenuItem onClick={handleClickLogOut}>Logout</MenuItem>
     </Menu>
   );
 
   return (
     <Route
       {...rest}
-      render={matchProps => (
+      render={(matchProps) => (
         <div className={classes.root}>
           <CssBaseline />
           <AppBar
             position="fixed"
             className={clsx(classes.appBar, {
-              [classes.appBarShift]: open
+              [classes.appBarShift]: open,
             })}
           >
             <Toolbar>
@@ -219,7 +248,7 @@ const UserLayout = ({ component: Component, container, history, ...rest }) => {
                       onClick={handleDrawerOpen}
                       edge="start"
                       className={clsx(classes.menuButton, {
-                        [classes.hide]: open
+                        [classes.hide]: open,
                       })}
                     >
                       <MenuIcon />
@@ -233,23 +262,23 @@ const UserLayout = ({ component: Component, container, history, ...rest }) => {
                       placeholder="Search for anything"
                       classes={{
                         root: classes.inputRoot,
-                        input: classes.inputInput
+                        input: classes.inputInput,
                       }}
                       inputProps={{ "aria-label": "search" }}
                     />
                   </Box>
                 </Box>
-                <Box>
-                  <IconButton
-                    edge="end"
-                    aria-label="account of current user"
-                    aria-controls=""
-                    aria-haspopup="true"
+                <Box className={classes.accountCircle}>
+                  <Avatar
                     onClick={handleProfileMenuOpen}
-                    color="inherit"
-                  >
-                    <AccountCircle className={classes.accountCircle} />
-                  </IconButton>
+                    src={
+                      currentUser && currentUser.photo
+                        ? `${
+                            config.baseUrl + uploadsEndPoint + currentUser.photo
+                          }`
+                        : null
+                    }
+                  />
                 </Box>
               </Box>
             </Toolbar>
@@ -258,13 +287,13 @@ const UserLayout = ({ component: Component, container, history, ...rest }) => {
             variant="permanent"
             className={clsx(classes.drawer, {
               [classes.drawerOpen]: open,
-              [classes.drawerClose]: !open
+              [classes.drawerClose]: !open,
             })}
             classes={{
               paper: clsx({
                 [classes.drawerOpen]: open,
-                [classes.drawerClose]: !open
-              })
+                [classes.drawerClose]: !open,
+              }),
             }}
           >
             <div className={classes.toolbar}>
@@ -289,6 +318,13 @@ const UserLayout = ({ component: Component, container, history, ...rest }) => {
                 </MenuItem>
               ))}
 
+              <MenuItem button key="Profile" onClick={handleClickSeeProfile}>
+                <ListItemIcon>
+                  <PersonIcon />
+                </ListItemIcon>
+                <ListItemText primary="Profile" />
+              </MenuItem>
+
               <MenuItem
                 button
                 key="Courses"
@@ -298,7 +334,7 @@ const UserLayout = ({ component: Component, container, history, ...rest }) => {
                 <ListItemIcon>
                   <MenuBookIcon />
                 </ListItemIcon>
-                <ListItemText primary="Courses" />
+                <ListItemText primary="Courses / Subjects" />
               </MenuItem>
 
               <MenuItem
@@ -324,6 +360,7 @@ const UserLayout = ({ component: Component, container, history, ...rest }) => {
           <main className={classes.content}>
             <div className={classes.toolbar} />
             <Component {...matchProps} />
+            <SuccessMessage />
           </main>
           {roleDialogOpen && (
             <RoleDialog
@@ -332,10 +369,31 @@ const UserLayout = ({ component: Component, container, history, ...rest }) => {
             />
           )}
           {renderMenu}>
+          {openProfile && (
+            <UserDetails
+              open={openProfile}
+              setOpen={setOpenProfile}
+              userDetails={currentUser}
+            />
+          )}
         </div>
       )}
     />
   );
 };
 
-export default withRouter(UserLayout);
+const mapStateToProps = (state) => {
+  return {
+    loggedIn: state.authentication.loggedIn,
+    users: state.user.users,
+    currentUser: state.authentication.currentUser,
+  };
+};
+
+const connectLayoutPage = withRouter(
+  connect(mapStateToProps, null, null, {
+    pure: false,
+  })(UserLayout)
+);
+
+export { connectLayoutPage as UserLayout };
