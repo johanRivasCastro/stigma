@@ -3,9 +3,9 @@ import {
   BrowserRouter as Router,
   Redirect,
   Route,
-  Switch
+  Switch,
 } from "react-router-dom";
-import { UserLayout } from "../layouts/userLayout";
+import { UserLayout } from "../layouts/users/userLayout";
 import { Users } from "../containers/Users";
 import { SignIn } from "../login/signIn";
 import { ResetPassword } from "../login/resetPassword";
@@ -23,9 +23,9 @@ const App = () => {
         <UserLayout
           exact
           path="/courseDetails/:courseId"
-          component={props => {
+          component={(props) => {
             const {
-              match: { params }
+              match: { params },
             } = props;
             return <CourseDetails courseId={params.courseId} />;
           }}

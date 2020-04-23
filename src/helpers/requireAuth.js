@@ -5,14 +5,12 @@ import { session } from "../helpers";
 export function requireAuth(ComposedComponent, roles) {
   class Authenticate extends React.Component {
     componentWillMount() {
-      console.log("111111111111");
       console.log(this.props.loggedIn);
       if (!this.props.loggedIn) {
-        console.log("222222222222222222");
         this.props.history.push("/login");
         return;
       }
-      console.log("333333333333333333");
+
       this.validateRoles();
     }
 
@@ -25,7 +23,6 @@ export function requireAuth(ComposedComponent, roles) {
 
     validateRoles() {
       if (Object.entries(this.props.currentUser).length > 0) {
-        console.log("6666666666666666");
         if (
           this.props.currentUser.roles.find((role) => {
             return role.authority === "ROLE_pino";

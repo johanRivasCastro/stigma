@@ -26,6 +26,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import GrainIcon from "@material-ui/icons/Grain";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import PersonIcon from "@material-ui/icons/Person";
+import BorderColorIcon from "@material-ui/icons/BorderColor";
 
 import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -33,123 +34,17 @@ import InboxIcon from "@material-ui/icons/MoveToInbox";
 import SearchIcon from "@material-ui/icons/Search";
 
 import { withRouter, Route } from "react-router-dom";
-import { RoleDialog } from "../components/users/role";
+import { RoleDialog } from "../../components/role/role";
+import { SubjectDialog } from "../../components/subject/subject";
 import { connect } from "react-redux";
 import GroupIcon from "@material-ui/icons/Group";
-import { loginActions } from "../redux/auth/auth.action";
+import { loginActions } from "../../redux/auth/auth.action";
 
-import config from "../config/config";
-import { UserDetails } from "../components/users/userDetails";
-import { session } from "../helpers/session";
-import { SuccessMessage } from "../components/common/succesMessage";
-
-const drawerWidth = 240;
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  menuButton: {
-    marginRight: 36,
-  },
-  hide: {
-    display: "none",
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: "nowrap",
-  },
-  drawerOpen: {
-    width: drawerWidth,
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerClose: {
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    overflowX: "hidden",
-    width: theme.spacing(7) + 1,
-    [theme.breakpoints.up("sm")]: {
-      width: theme.spacing(9) + 1,
-    },
-  },
-  toolbar: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    padding: theme.spacing(0, 1),
-    ...theme.mixins.toolbar,
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
-  toolbarBox: {
-    width: "100%",
-    paddingRight: "20px",
-  },
-  accountCircle: {
-    fontSize: "48px",
-    cursor: "pointer",
-  },
-  search: {
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(1),
-      width: "auto",
-    },
-  },
-  searchIcon: {
-    width: theme.spacing(7),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  inputRoot: {
-    color: "inherit",
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 7),
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      width: 150,
-      "&:focus": {
-        width: 200,
-      },
-    },
-  },
-}));
+import config from "../../config/config";
+import { UserDetails } from "../../components/users/userDetails";
+import { session } from "../../helpers/session";
+import { SuccessMessage } from "../../components/common/succesMessage";
+import { useStyles } from "./styles";
 
 const UserLayout = ({
   component: Component,
@@ -164,8 +59,11 @@ const UserLayout = ({
   const uploadsEndPoint = "uploads/";
   const classes = useStyles();
   const theme = useTheme();
+
   const [open, setOpen] = useState(true);
   const [roleDialogOpen, setRoleDialogOpen] = useState(false);
+  const [subjectDialogOpen, setSubejctDialogOpen] = useState(false);
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [selected, setSelected] = useState(-1);
   const [openProfile, setOpenProfile] = useState(false);
@@ -332,9 +230,9 @@ const UserLayout = ({
                 selected={selected === 1}
               >
                 <ListItemIcon>
-                  <MenuBookIcon />
+                  <BorderColorIcon />
                 </ListItemIcon>
-                <ListItemText primary="Courses / Subjects" />
+                <ListItemText primary="Courses" />
               </MenuItem>
 
               <MenuItem
@@ -347,6 +245,17 @@ const UserLayout = ({
                   <GroupIcon />
                 </ListItemIcon>
                 <ListItemText primary="Users" />
+              </MenuItem>
+
+              <MenuItem
+                button
+                key="Subjects"
+                onClick={() => setSubejctDialogOpen(true)}
+              >
+                <ListItemIcon>
+                  <MenuBookIcon />
+                </ListItemIcon>
+                <ListItemText primary="Subjects" />
               </MenuItem>
 
               <MenuItem button key="Roles" onClick={handleRoleDialogOpen}>
@@ -366,6 +275,12 @@ const UserLayout = ({
             <RoleDialog
               open={roleDialogOpen}
               handleClose={handleRoleDialogOpen}
+            />
+          )}
+          {subjectDialogOpen && (
+            <SubjectDialog
+              open={subjectDialogOpen}
+              setOpen={setSubejctDialogOpen}
             />
           )}
           {renderMenu}>

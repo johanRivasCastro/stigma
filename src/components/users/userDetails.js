@@ -403,23 +403,28 @@ const UserDetails = ({
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      {roles.map((role, i) => (
-                        <FormControlLabel
-                          key={i}
-                          control={
-                            <Checkbox
-                              color="secondary"
-                              name={role.authority}
-                              value={role.authority}
-                              checked={userRoles.get(role.authority)}
-                              onChange={handleCheckRoles}
-                            />
-                          }
-                          label={role.authority
-                            .substring(5, role.authority.length)
-                            .replace("_", " ")}
-                        />
-                      ))}
+                      <Box display="flex">
+                        <Box marginRight={3}>
+                          <strong>Roles:</strong>
+                        </Box>
+                        {roles.map((role, i) => (
+                          <FormControlLabel
+                            key={i}
+                            control={
+                              <Checkbox
+                                color="secondary"
+                                name={role.authority}
+                                value={role.authority}
+                                checked={userRoles.get(role.authority)}
+                                onChange={handleCheckRoles}
+                              />
+                            }
+                            label={role.authority
+                              .substring(5, role.authority.length)
+                              .replace("_", " ")}
+                          />
+                        ))}
+                      </Box>
                     </Grid>
                     <Grid item xs={12} sm={12}>
                       <Box display="flex" justifyContent="flex-end">

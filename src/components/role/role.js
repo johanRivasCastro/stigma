@@ -12,7 +12,7 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { roleActions } from "../../redux/role/role.action";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import { ErrorMessage } from "../../components/common/errorMessage";
+import { ErrorMessage } from "../common/errorMessage";
 
 //=======================
 
@@ -27,20 +27,20 @@ import Paper from "@material-ui/core/Paper";
 import DeleteIcon from "@material-ui/icons/Delete";
 //===============
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     margin: 0,
-    padding: theme.spacing(2)
+    padding: theme.spacing(2),
   },
   closeButton: {
     position: "absolute",
     right: theme.spacing(1),
     top: theme.spacing(1),
-    color: theme.palette.grey[500]
-  }
+    color: theme.palette.grey[500],
+  },
 });
 
-const DialogTitle = withStyles(styles)(props => {
+const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
@@ -58,32 +58,35 @@ const DialogTitle = withStyles(styles)(props => {
   );
 });
 
-const DialogContent = withStyles(theme => ({
+const DialogContent = withStyles((theme) => ({
   root: {
-    padding: theme.spacing(2)
-  }
+    padding: theme.spacing(2),
+  },
 }))(MuiDialogContent);
 
 const useStyles = makeStyles({
   table: {
-    minWidth: 500
+    minWidth: 500,
   },
   dialog: {
-    minWidth: "600px"
+    minWidth: "600px",
   },
   deleteIcon: {
     color: "red",
-    cursor: "pointer"
+    cursor: "pointer",
   },
   tableContainer: {
-    maxHeight: "300px"
-  }
+    maxHeight: "300px",
+  },
+  tableHead: {
+    fontWeight: "bold",
+  },
 });
 
 function RolesTable({ roles = [], dispatch }) {
   const classes = useStyles();
 
-  const handleClickDeleteRole = id => {
+  const handleClickDeleteRole = (id) => {
     dispatch(roleActions.deleteRole(id));
   };
 
@@ -92,13 +95,15 @@ function RolesTable({ roles = [], dispatch }) {
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Role</TableCell>
-            <TableCell>Description</TableCell>
-            <TableCell align="center">Delete</TableCell>
+            <TableCell className={classes.tableHead}>Role</TableCell>
+            <TableCell className={classes.tableHead}>Description</TableCell>
+            <TableCell className={classes.tableHead} align="center">
+              Delete
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {roles.map(row => (
+          {roles.map((row) => (
             <TableRow key={row.id}>
               <TableCell component="th" scope="row">
                 {row.authority.substring(5, row.authority.length)}
@@ -123,13 +128,13 @@ const RoleDialog = ({ open, handleClose, roles, dispatch, errorMessage }) => {
 
   const [inputValues, setInputValues] = useState({
     authority: "",
-    description: ""
+    description: "",
   });
 
-  const handleInputChange = e => {
+  const handleInputChange = (e) => {
     setInputValues({
       ...inputValues,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -201,16 +206,16 @@ const RoleDialog = ({ open, handleClose, roles, dispatch, errorMessage }) => {
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     roles: state.role.roles,
-    errorMessage: state.alertInfo.errorMessage
+    errorMessage: state.alertInfo.errorMessage,
   };
 };
 
 const connectLoginPage = withRouter(
   connect(mapStateToProps, null, null, {
-    pure: false
+    pure: false,
   })(RoleDialog)
 );
 

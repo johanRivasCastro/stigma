@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { userActions } from "../redux/user/user.action";
 import { roleActions } from "../redux/role/role.action";
+import { subjectActions } from "../redux/subject/subject.action";
 import { withRouter } from "react-router-dom";
 import User from "../components/users/user";
 import { Grid, Box, makeStyles } from "@material-ui/core";
@@ -14,7 +15,7 @@ class Users extends Component {
     super(props);
     this.state = {
       activePage: 1,
-      filter: ""
+      filter: "",
     };
     this.handlePageChange = this.handlePageChange.bind(this);
     this.setFilter = this.setFilter.bind(this);
@@ -24,6 +25,7 @@ class Users extends Component {
     const { dispatch } = this.props;
     dispatch(userActions.getUsers(this.state.activePage, this.state.filter));
     dispatch(roleActions.getRoles());
+    dispatch(subjectActions.getSubjects());
   }
 
   handlePageChange(pageNumber) {
@@ -75,16 +77,16 @@ class Users extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     users: state.user.users,
-    usersPagination: state.user.usersPagination
+    usersPagination: state.user.usersPagination,
   };
 };
 
 const connectedUsersPage = withRouter(
   connect(mapStateToProps, null, null, {
-    pure: false
+    pure: false,
   })(Users)
 );
 
